@@ -9,6 +9,7 @@ class MyRecipe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+      backgroundColor: Colors.grey.shade50,
        appBar: AppBar(
         centerTitle: true,
         // backgroundColor: Colors.grey.shade100,
@@ -21,9 +22,22 @@ class MyRecipe extends StatelessWidget {
               GoogleFonts.pacifico(fontSize: 18, fontWeight: FontWeight.w300),
         ),
       ),
-      body: Column(
-        children: [],
-      ),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: ListView.builder(
+          itemCount: 5,
+          itemBuilder: (context,index){
+          return ListTile(
+                              leading: const Icon(Icons.shopping_cart),
+                              title: Text('Title'),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.more_vert),
+                                onPressed: () {}
+                              )
+                              );
+        }, 
+        ),
+      )
     );
   }
 }
