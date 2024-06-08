@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/Apis/youtube_player_api.dart';
 import 'package:fridge_to_feast/logic/cubit/youtube_player/youtube_player_cubit.dart';
-import 'package:fridge_to_feast/presentation/screens/ui/navigations/youtube_player.dart';
+import 'package:fridge_to_feast/presentation/screens/ui/navigations/youtube_screens/youtube_player.dart';
 
 class Youtube extends StatelessWidget {
    Youtube({
@@ -25,7 +25,7 @@ class Youtube extends StatelessWidget {
                         controller: _searchController,
                     decoration: InputDecoration(
                         isDense: true,
-                        hintText: "Recipe of making tomato sauce ?",
+                        hintText: "How to make cake ?",
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                             onPressed: () {
@@ -39,9 +39,17 @@ class Youtube extends StatelessWidget {
               builder: (context, state) {
                 if(state is YoutubeSearchingLoadedState){
                   return _suggestedSearches(context,state);
+                }else if(state is YoutubeSearchingLoadingState){
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 }
-                else{
-                  return Center(child: Text("some wrong from youtube.dart"),);
+                else if(state is YoutubeSearchingErrorState){
+                  return Center(child: Text("${state.message.toString()}"),);
+                }else if(state is YoutubeSearchingEmptyState){
+                  return Center(child: Text("Search some videos"));
+                }else{
+                  return Text("data");
                 }
               },
             ),

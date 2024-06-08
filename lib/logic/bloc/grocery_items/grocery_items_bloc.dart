@@ -11,6 +11,7 @@ class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
     on<AddGroceryItemsEvent>(addItems);
     on<DeleteGroceryItemsEvent>(deleteItems);
     on<UpdateGroceryItemsEvent>(updateItems);
+
   }
 
 
@@ -34,8 +35,10 @@ class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
       if(i == event.index){
         newList[i]["item"]=event.updateitem;
         newList[i]["expiry-date"]=event.updateExpiryDate;
-    emit(GroceryItemsLoadedState(listOfItems: List.from(newList))); 
       }
     }
+    print(newList);
+    emit(GroceryItemsLoadedState(listOfItems: List.from(newList))); 
   }
+
 }

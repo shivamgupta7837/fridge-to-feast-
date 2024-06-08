@@ -9,14 +9,17 @@ part 'youtube_player_state.dart';
 
 class YoutubeCubit extends Cubit<YoutubeSearchingState> {
    final _obj = YoutubePlayerApi();
-  YoutubeCubit() : super(YoutubeInitial());
+  YoutubeCubit() : super(YoutubeInitial()){
+    emit(YoutubeSearchingEmptyState());
+  }
 
   void getSearchedVideosFromYoutube({required String title})async{
+    emit(YoutubeSearchingLoadingState());
     final data = await _obj.getVideoSearch(searchVideoTitle: title);
     try{
         emit(YoutubeSearchingLoadedState(data:data ));
       }catch(e){
-        print("Getting error from YoutubeApi: $e");
+        emit(YoutubeSearchingErrorState(message: "Error from youtube cubit"));
       }
     
   }

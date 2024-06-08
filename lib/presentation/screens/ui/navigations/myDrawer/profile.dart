@@ -15,7 +15,7 @@ class Profile extends StatelessWidget {
         elevation: 5,
         foregroundColor: Colors.black,
         title: Text(
-          "Profile",
+          "My Profile",
           style:
               GoogleFonts.pacifico(fontSize: 18, fontWeight: FontWeight.w300),
         ),
@@ -47,21 +47,7 @@ class Profile extends StatelessWidget {
           ),
             
           ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                    child: const Row(
-                      children: [
-                                Icon(Icons.logout,color: Colors.red,size: 18,),
-                            SizedBox(width: 5,),
-                        Text("Logout",
-                            style: TextStyle(color: Colors.black,fontSize: 16)),
-                      ],
-                    ),
-                    onPressed: () {}),
-              ],
-            )
+           
         ],
       ),
     );

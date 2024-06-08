@@ -21,5 +21,10 @@ class YoutubeSearchingLoadedState extends YoutubeSearchingState {
  List<Object> get props => [data];
 }
 
-class ErrorYoutubeSearchingState extends YoutubeSearchingState {}
+class YoutubeSearchingErrorState extends YoutubeSearchingState {
+  final String message;
+ YoutubeSearchingErrorState({required this.message});
+
+  List<Object> get props=>[message];
+}
 

@@ -12,7 +12,9 @@ part 'kitchen_campanion_state.dart';
 class KitchenCampanionCubit extends Cubit<KitchenCampanionState> {
   List<KitchenCampanionModel> newList = [];
   final _key = ApiKey();
-  KitchenCampanionCubit() : super(KitchenCampanionInitial());
+  KitchenCampanionCubit() : super(KitchenCampanionInitial()){
+    emit(KitchenCampanionEmptyState());
+  }
 
   void sendmessage(
       {required String message, required bool promt, required DateTime date}) {
@@ -22,8 +24,8 @@ class KitchenCampanionCubit extends Cubit<KitchenCampanionState> {
   }
 
   void geminiResponse({required String messageToGemini}) async {
-    emit(KitchenCampanionLoadingState());
     try {
+      // emit(KitchenCampanionLoadingState());
       final model =
           GenerativeModel(model: 'gemini-1.5-flash', apiKey: _key.getGeminiKey());
       final content = [Content.text(messageToGemini)];
@@ -34,7 +36,7 @@ class KitchenCampanionCubit extends Cubit<KitchenCampanionState> {
           date: DateTime.now()));
       emit(KitchenCampanionLoadedState(user: List.from(newList)));
     } catch (e) {
-      print("Error: $e");
+      emit(KitchenCampanionErrorState(message: e.toString()));
     }
   }
 

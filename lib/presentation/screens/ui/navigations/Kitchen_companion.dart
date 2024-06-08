@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/logic/cubit/kitchen_campanion/kitchen_campanion_cubit.dart';
 import 'package:fridge_to_feast/models/kitchen_campanion_model.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class KitchenCompanion extends StatelessWidget {
   KitchenCompanion({
@@ -43,18 +45,28 @@ class KitchenCompanion extends StatelessWidget {
               } else if (state is KitchenCampanionEmptyState) {
                 return SizedBox(
                     height: MediaQuery.of(context).size.height * 0.7,
-                    child: SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        child: const Center(
-                            child:
-                                Text("Type some thing to begin the chat !!"))));
-              } else if (state is KitchenCampanionLoadingState) {
-                return SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.7,
                     child: const Center(
-                      child: CircularProgressIndicator(),
-                    ));
-              } else {
+                        child: Text("Type some thing to begin the chat !!")));
+              } else if (state is KitchenCampanionLoadingState) {
+                return Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    child: Row(
+                      children: [
+                        Text(
+                          "Typing",
+                          style: GoogleFonts.poppins(),
+                        ),
+                        Lottie.asset("assets/animations/typing.json",
+                            height: 25),
+                      ],
+                    ),
+                  ),
+                );
+              } else if( state is KitchenCampanionErrorState){
+                return Center(child: Text(state.message),);
+              }else {
                 return SizedBox(
                     height: MediaQuery.of(context).size.height * 0.7,
                     child:
@@ -71,7 +83,7 @@ class KitchenCompanion extends StatelessWidget {
                 decoration: InputDecoration(
                     isDense: true,
                     border: const OutlineInputBorder(),
-                    label: const Text("Ask to AI"),
+                    label: const Text("Ask to your campanion"),
                     hintText: "How to make cake ?",
                     suffixIcon: IconButton(
                       icon: Icon(Icons.send),
@@ -87,7 +99,7 @@ class KitchenCompanion extends StatelessWidget {
                     )),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -100,13 +112,15 @@ class KitchenCompanion extends StatelessWidget {
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          boxShadow: [ BoxShadow(
-        color: Colors.black.withOpacity(0.15),
-        spreadRadius: 0,
-        blurRadius: 10,
-        offset: Offset(0, 4),
-      ),],
-          color: Colors.deepPurple.shade200,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              spreadRadius: 0,
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+          color: Colors.deepPurple.shade400,
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: prompt.isPrompt == true
@@ -127,21 +141,21 @@ class KitchenCompanion extends StatelessWidget {
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
-          boxShadow: [ BoxShadow(
-        color: Colors.black.withOpacity(0.15),
-        spreadRadius: 0,
-        blurRadius: 10,
-        offset: Offset(0, 4),
-      ),],
-          // sha
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              spreadRadius: 0,
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
           color: Colors.white,
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: prompt.isPrompt == false
             ? Text(
                 prompt.message.toString(),
-                style: theme.textTheme.bodyLarge!
-                    .copyWith(color: Colors.black),
+                style: theme.textTheme.bodyLarge!.copyWith(color: Colors.black),
               )
             : Container(),
       ),

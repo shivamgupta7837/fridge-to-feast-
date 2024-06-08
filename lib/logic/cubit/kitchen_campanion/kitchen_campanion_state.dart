@@ -21,4 +21,10 @@ class KitchenCampanionLoadedState extends KitchenCampanionState {
 
 
 
-class ReadKitchenCampanionState extends KitchenCampanionState {}
+class KitchenCampanionErrorState extends KitchenCampanionState {
+  final String message;
+
+  KitchenCampanionErrorState({required this.message});
+
+  List<Object> get props=>[message];
+}

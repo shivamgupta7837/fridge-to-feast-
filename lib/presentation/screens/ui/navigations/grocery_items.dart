@@ -17,6 +17,11 @@ class _GroceryItemsState extends State<GroceryItems> {
   final _expiryDateController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+@override
+  // void initState() {
+  //  context.read<GroceryItemsBloc>().add(ReadGroceryItemsEvent());
+  //   super.initState();
+  // }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -29,7 +34,7 @@ class _GroceryItemsState extends State<GroceryItems> {
               padding: const EdgeInsets.all(10),
               child: BlocBuilder<GroceryItemsBloc, GroceryItemsState>(
                 builder: (context, state) {
-                  if (state is GroceryItemsLoadedState) {
+                  if (state is GroceryItemsLoadedState && state.listOfItems.isNotEmpty) {
                     final items = state.listOfItems;
                     return ListView.separated(
                         separatorBuilder: (context, index) => const Divider(),
@@ -86,8 +91,18 @@ class _GroceryItemsState extends State<GroceryItems> {
                               )
                               );
                         });
-                  } else {
-                    return Container();
+                  }else if(state is GroceryItemsEmptyState){
+                    return Center(
+                      child: Text("Add grocery items"),
+                    );
+                  }
+                  else if(state is GroceryItemsErrorState){
+                    return Text(state.message);
+                  }
+                   else {
+                    return Center(
+                      child: Text("Add grocery items"),
+                    );
                   }
                 },
               )),
