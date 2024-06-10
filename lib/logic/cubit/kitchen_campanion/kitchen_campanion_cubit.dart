@@ -5,12 +5,14 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fridge_to_feast/Apis/api_keys.dart';
 import 'package:fridge_to_feast/models/kitchen_campanion_model.dart';
+import 'package:fridge_to_feast/models/my_recipies_model.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 part 'kitchen_campanion_state.dart';
 
 class KitchenCampanionCubit extends Cubit<KitchenCampanionState> {
   List<KitchenCampanionModel> newList = [];
+  List<MyRecipiesModel> recipeList = [];
   final _key = ApiKey();
   KitchenCampanionCubit() : super(KitchenCampanionInitial()){
     emit(KitchenCampanionEmptyState());
@@ -31,7 +33,7 @@ class KitchenCampanionCubit extends Cubit<KitchenCampanionState> {
       final content = [Content.text(messageToGemini)];
       final response = await model.generateContent(content);
       newList.add(KitchenCampanionModel(
-          message: removeSymbols(response.text.toString()),
+          message: _removeSymbols(response.text.toString()),
           isPrompt: false,
           date: DateTime.now()));
       emit(KitchenCampanionLoadedState(user: List.from(newList)));
@@ -40,7 +42,7 @@ class KitchenCampanionCubit extends Cubit<KitchenCampanionState> {
     }
   }
 
-  String removeSymbols(String geminiResponse) {
+  String _removeSymbols(String geminiResponse) {
   return geminiResponse.replaceAll('#', '').replaceAll('*', '');
 }
 

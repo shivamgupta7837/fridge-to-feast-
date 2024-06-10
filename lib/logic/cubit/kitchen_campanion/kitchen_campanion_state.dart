@@ -14,12 +14,10 @@ class KitchenCampanionEmptyState extends KitchenCampanionState {}
 class KitchenCampanionLoadingState extends KitchenCampanionState {}
 
 class KitchenCampanionLoadedState extends KitchenCampanionState {
-  final List<KitchenCampanionModel> user ;
-  const KitchenCampanionLoadedState({required this.user});
+   List<KitchenCampanionModel> user = [];
+   KitchenCampanionLoadedState({required this.user});
   List<Object> get props => [user];
 }
-
-
 
 class KitchenCampanionErrorState extends KitchenCampanionState {
   final String message;

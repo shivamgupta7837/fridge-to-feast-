@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/firebase_options.dart';
 import 'package:fridge_to_feast/logic/bloc/grocery_items/grocery_items_bloc.dart';
 import 'package:fridge_to_feast/logic/cubit/kitchen_campanion/kitchen_campanion_cubit.dart';
+import 'package:fridge_to_feast/logic/cubit/my_recipe/my_recipe_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/youtube_player/youtube_player_cubit.dart';
 import 'package:fridge_to_feast/presentation/screens/home_page.dart';
 
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<YoutubeCubit>(
           create: (context) => YoutubeCubit(),
+        ),
+        BlocProvider<MyRecipeCubit>(
+          create: (context) => MyRecipeCubit(),
         ),
       ],
       child: MaterialApp(

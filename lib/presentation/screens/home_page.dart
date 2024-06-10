@@ -47,16 +47,18 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       : null),
         ),
       ),
-      body: <Widget>[
-        GroceryItems(),
-        //! Ask from AI
-        KitchenCompanion(theme: theme),
-        //!Youtube
-        Youtube(),
-      ][currentPageIndex],
+      body: SafeArea(
+        child: <Widget>[
+          GroceryItems(),
+          //! Ask from AI
+          KitchenCompanion(theme: theme),
+          //!Youtube
+          Youtube(),
+        ][currentPageIndex],
+      ),
       bottomNavigationBar: myNavigationBarr(),
       drawer: Container(
-        margin:EdgeInsets.only(top:40,bottom: 400),
+        margin:const EdgeInsets.only(top:40,bottom: 400),
           width: MediaQuery.of(context).size.width * 0.2,
         child: myDrawer(context),
       ),
@@ -79,7 +81,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 )),
               ),
               IconButton(
-                  onPressed: () {}, icon: Icon(Icons.location_on_outlined,size: 28,)),
+                  onPressed: () {}, icon: const Icon(Icons.location_on_outlined,size: 28,)),
               const SizedBox(
                 height: 2,
               ),
