@@ -13,19 +13,18 @@ class GroceryItems extends StatefulWidget {
 }
 
 class _GroceryItemsState extends State<GroceryItems> {
+
   final _itemsController = TextEditingController();
   final _expiryDateController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
 @override
-  // void initState() {
-  //  context.read<GroceryItemsBloc>().add(ReadGroceryItemsEvent());
-  //   super.initState();
-  // }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      // physics: const NeverScrollableScrollPhysics(),
+     
       child: Column(
         children: [
           Container(
@@ -52,7 +51,6 @@ class _GroceryItemsState extends State<GroceryItems> {
                                 onPressed: () => showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      //TODO: Fix the error of editing the item. 
                                       return AlertDialog(
                                         content: SingleChildScrollView(
                                           child: ListBody(
@@ -62,7 +60,9 @@ class _GroceryItemsState extends State<GroceryItems> {
                                                     _showAlertDialogBox(
                                                         context: context,
                                                         isEdittable: true,
-                                                        index: index);
+                                                        index: index,
+                                                        state:state
+                                                        );
                                                   },
                                                   child: const Text(
                                                       "Rename Item")),
@@ -132,7 +132,12 @@ class _GroceryItemsState extends State<GroceryItems> {
   Future<dynamic> _showAlertDialogBox(
       {required BuildContext context,
       required bool isEdittable,
-      int index = 0}) {
+      int index = 0,
+      dynamic state
+      }) {
+        if(state is GroceryItemsLoadedState){
+
+        }
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -221,6 +226,7 @@ class _GroceryItemsState extends State<GroceryItems> {
                     _expiryDateController.clear();
                     _itemsController.clear();
                     Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   }
                 }
               },
@@ -228,16 +234,6 @@ class _GroceryItemsState extends State<GroceryItems> {
             TextButton(
               child: const Text('Cancel'),
               onPressed: () {
-                 if(isEdittable==true) {
-                    context.read<GroceryItemsBloc>().add(
-                        UpdateGroceryItemsEvent(
-                            updateitem: _itemsController.text,
-                            index: index,
-                            updateExpiryDate: _expiryDateController.text));
-                    _expiryDateController.clear();
-                    _itemsController.clear();
-                    Navigator.of(context, rootNavigator: true).pop();
-                  }
                 Navigator.of(context).pop();
               },
             ),

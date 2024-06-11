@@ -30,15 +30,18 @@ class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
   }
 
 
-  Future<void> updateItems(UpdateGroceryItemsEvent event,Emitter<GroceryItemsState> emit)async{
-    for (int i=0;i<newList.length;i++) {
-      if(i == event.index){
-        newList[i]["item"]=event.updateitem;
-        newList[i]["expiry-date"]=event.updateExpiryDate;
-      }
+    Future<void> updateItems(UpdateGroceryItemsEvent event,Emitter<GroceryItemsState> emit)async{
+    if (event.index < newList.length) {
+      newList[event.index] = {
+        "item": event.updateitem,
+        "expiry-date": event.updateExpiryDate
+      };
+      emit(GroceryItemsLoadedState(listOfItems: List.from(newList)));
+    } else {
+      emit(GroceryItemsErrorState(message: "Index out of range"));
     }
-    print(newList);
-    emit(GroceryItemsLoadedState(listOfItems: List.from(newList))); 
-  }
+  } 
+
+
 
 }

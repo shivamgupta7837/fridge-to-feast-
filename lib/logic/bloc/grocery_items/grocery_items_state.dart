@@ -19,7 +19,7 @@ class GroceryItemsLoadingState extends GroceryItemsState {
 
 class GroceryItemsLoadedState extends GroceryItemsState {
    final List<Map<String,dynamic>> listOfItems;
-   GroceryItemsLoadedState({required this.listOfItems});
+   const GroceryItemsLoadedState({required this.listOfItems});
 
    
      List<Object> get props => [listOfItems];

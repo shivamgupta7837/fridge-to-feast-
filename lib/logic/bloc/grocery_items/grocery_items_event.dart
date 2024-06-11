@@ -11,9 +11,10 @@ sealed class GroceryItemsEvent extends Equatable {
 class AddGroceryItemsEvent extends GroceryItemsEvent {
   final String item;
   final String expiryDate;
+  
   AddGroceryItemsEvent( {required  this.item,required this.expiryDate,});
 
-  List<Object> get props => [item];
+  List<Object> get props => [item,expiryDate];
   
 }
 
