@@ -37,7 +37,7 @@ class MyRecipe extends StatelessWidget {
                 final title = state.recipesList[index].title;
                 final recipe = state.recipesList[index].recipe;
                   return ListTile(
-                      leading: CircleAvatar(radius: 15,child: Text((index+1).toString(),style: TextStyle(fontSize: 14),),),
+                      leading: CircleAvatar(radius: 15,child: Text((index+1).toString(),style: const TextStyle(fontSize: 14),),),
                       title: Text(title.toString()),
                       trailing: IconButton(
                           icon: const Icon(Icons.delete), onPressed: () {

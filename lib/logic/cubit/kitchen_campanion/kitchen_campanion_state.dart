@@ -15,6 +15,8 @@ class KitchenCampanionLoadingState extends KitchenCampanionState {}
 
 class KitchenCampanionLoadedState extends KitchenCampanionState {
    List<KitchenCampanionModel> user = [];
+
+  
    KitchenCampanionLoadedState({required this.user});
   List<Object> get props => [user];
 }

@@ -25,9 +25,9 @@ class KitchenCampanionCubit extends Cubit<KitchenCampanionState> {
     emit(KitchenCampanionLoadedState(user: List.from(newList)));
   }
 
-  void geminiResponse({required String messageToGemini}) async {
+  void getGeminiResponse({required String messageToGemini}) async {
+
     try {
-      // emit(KitchenCampanionLoadingState());
       final model =
           GenerativeModel(model: 'gemini-1.5-flash', apiKey: _key.getGeminiKey());
       final content = [Content.text(messageToGemini)];
@@ -36,7 +36,9 @@ class KitchenCampanionCubit extends Cubit<KitchenCampanionState> {
           message: _removeSymbols(response.text.toString()),
           isPrompt: false,
           date: DateTime.now()));
+
       emit(KitchenCampanionLoadedState(user: List.from(newList)));
+
     } catch (e) {
       emit(KitchenCampanionErrorState(message: e.toString()));
     }
