@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fridge_to_feast/presentation/screens/ui/navigations/Kitchen_companion.dart';
-import 'package:fridge_to_feast/presentation/screens/ui/navigations/grocery_items.dart';
-import 'package:fridge_to_feast/presentation/screens/ui/navigations/myDrawer/my_recipe.dart';
-import 'package:fridge_to_feast/presentation/screens/ui/navigations/myDrawer/profile.dart';
-import 'package:fridge_to_feast/presentation/screens/ui/navigations/youtube_screens/youtube.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/Kitchen_companion.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/grocery_items.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/my_recipe.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/profile.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/youtube_screens/youtube.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePageScreen extends StatefulWidget {

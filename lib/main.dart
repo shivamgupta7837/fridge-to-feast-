@@ -7,7 +7,7 @@ import 'package:fridge_to_feast/logic/bloc/grocery_items/grocery_items_bloc.dart
 import 'package:fridge_to_feast/logic/cubit/kitchen_campanion/kitchen_campanion_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/my_recipe/my_recipe_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/youtube_player/youtube_player_cubit.dart';
-import 'package:fridge_to_feast/presentation/screens/home_page.dart';
+import 'package:fridge_to_feast/presentation/ui/auth_ui/loginpage.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<GroceryItemsBloc>(
           create: (context) => GroceryItemsBloc(),
         ),
-        BlocProvider<KitchenCampanionCubit>(
+        BlocProvider<KitchenCampanionCubit>(  
           create: (context) => KitchenCampanionCubit(),
         ),
         BlocProvider<YoutubeCubit>(
@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePageScreen()
+      home: LoginPage()
     ),
     );
   }
-}
+ }

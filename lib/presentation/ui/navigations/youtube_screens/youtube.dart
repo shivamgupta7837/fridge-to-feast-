@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/Apis/youtube_player_api.dart';
 import 'package:fridge_to_feast/logic/cubit/youtube_player/youtube_player_cubit.dart';
-import 'package:fridge_to_feast/presentation/screens/ui/navigations/youtube_screens/youtube_player.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/youtube_screens/youtube_player.dart';
 
 class Youtube extends StatelessWidget {
    Youtube({

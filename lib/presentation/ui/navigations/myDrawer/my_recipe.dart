@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/logic/cubit/my_recipe/my_recipe_cubit.dart';
-import 'package:fridge_to_feast/presentation/screens/ui/navigations/myDrawer/my_recipe_full_Screen.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/my_recipe_full_Screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MyRecipe extends StatelessWidget {
