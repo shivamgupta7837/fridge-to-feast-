@@ -1,113 +1,41 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class LoginService{
-
-  String? name =" ";
-  String email =" ";
-
-   googleSignIn()async{
-    final GoogleSignInAccount? user = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? auth = await user?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: auth!.accessToken,
-      idToken: auth.idToken
-    );
-
-
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+class LoginService {
+  Future<void> signInToGoogleAccount() async {
+    try {
+      final GoogleSignInAccount? user = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? auth = await user?.authentication;
+      final credential = GoogleAuthProvider.credential(
+          accessToken: auth!.accessToken, idToken: auth.idToken);
+      FirebaseAuth.instance.signInWithCredential(credential);
+    } catch (e) {
+      throw Exception('Sign-in failed: $e');
+    }
   }
 
-  isUserLoggedIn()async{
-     FirebaseAuth.instance.userChanges().listen((user){
-      if(user == null){
-        print("User is logged out");
-      }else{
-        print("User is logged in");
-
-      }
-    });
-   
+  Future<User> getCredentialsFromGoogleAccount() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      print("user ${user!.displayName}");
+      return user;
+    } catch (e) {
+      throw Exception('from user credential : No user signed in');
+    }
   }
 
-  logoutUse()async{
-    final FirebaseAuth auth =  FirebaseAuth.instance;
-    auth.signOut();
-
-     final GoogleSignInAccount? user = await GoogleSignIn().signOut();
-    if(user == null){
-       print("User is logged out");
-      }else{
-        print("User is logged in");
-
-      }
-    //  if(auth == null){
-    //     print("User is logged out");
-    //   }else{
-    //     print("User is logged in");
-
-    //   }
-  }
-}
-
-
-/*
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
-class LoginService{
-  GoogleSignInAccount? userSignIn;
-   GoogleSignInAuthentication? auth;
-  final FirebaseAuth? instance;
-  OAuthCredential? credential;
-
-  LoginService({required this.userSignIn, required this.auth, required this.instance, required this.credential});
-  // String? _accessToken;
-  // String? _idToken;
-
- void  googleSignIn()async{
-   try{
-    userSignIn = await GoogleSignIn().signIn();
-    auth = await userSignIn?.authentication;
-
-    // _accessToken = auth!.accessToken;
-    // _idToken = auth!.idToken;
-   }catch(e){
-    throw  Exception(e);
-   }
+  Future<bool> isUserLoggedIn() async {
+    return await GoogleSignIn().isSignedIn();
   }
 
-   isUserLoggedIn(){
-    print("in login");
-     instance!.userChanges().listen((user){
-      if(user == null){
-     print(user);
-      }
-    });
-  }
-
-
-  void logoutUse()async{
-  try{
-    instance!.signOut();
-  }catch(e){
-    throw Exception(e);
-  }
-  }
-
-  void saveUserCredential(){
-    try{
-      credential = GoogleAuthProvider.credential(
-      accessToken: auth!.accessToken,
-      idToken: auth!.idToken
-
-    );
-    print("tokeennnnnnnnnn");
-      print(credential);
-    }catch(e){
-      throw Exception(e);
+  Future<bool> logoutUser() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    try {
+      await auth.signOut();
+      await GoogleSignIn().signOut();
+      return true;
+    } catch (e) {
+      throw Exception('Logout failed: $e');
     }
   }
 }
-
-*/

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fridge_to_feast/logic/cubit/auth/auth_cubit.dart';
+import 'package:fridge_to_feast/presentation/ui/auth_ui/loginpage.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/Kitchen_companion.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/grocery_items.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/my_recipe.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/profile.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/youtube_screens/youtube.dart';
+import 'package:fridge_to_feast/repositary/share_preferences/user_credentials_share_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePageScreen extends StatefulWidget {
@@ -22,6 +25,23 @@ class _HomePageScreenState extends State<HomePageScreen> {
     "Youtube videos"
   ];
 
+  String? name;
+  String? email;
+  String? image_url;
+  @override
+  initState() {
+    super.initState();
+    check();
+  }
+
+  void check() async {
+    LocalRepo repo = LocalRepo();
+    final details = await repo.getUserCredentials();
+    name = details.name;
+    email = details.email;
+    image_url = details.profileUrl;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -29,10 +49,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor:
-            titleOfNavigationScreens[currentPageIndex] == "Youtube videos"
-                ? Colors.red[800]
-                : null,
+     
         shadowColor: Colors.black,
         elevation: 5,
         foregroundColor: Colors.black,
@@ -41,10 +58,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
           style: GoogleFonts.pacifico(
               fontSize: 18,
               fontWeight: FontWeight.w300,
-              color:
-                  titleOfNavigationScreens[currentPageIndex] == "Youtube videos"
-                      ? Colors.white
-                      : null),
+                      ),
         ),
       ),
       body: SafeArea(
@@ -58,51 +72,78 @@ class _HomePageScreenState extends State<HomePageScreen> {
       ),
       bottomNavigationBar: myNavigationBarr(),
       drawer: Container(
-        margin:const EdgeInsets.only(top:40,bottom: 400),
-          width: MediaQuery.of(context).size.width * 0.2,
+        margin: const EdgeInsets.only(top: 40, bottom: 400),
+        width: MediaQuery.of(context).size.width * 0.2,
         child: myDrawer(context),
       ),
     );
   }
 
-  Drawer myDrawer(BuildContext context) {
-    return Drawer(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0),
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: () => Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => Profile())),
-                child:  CircleAvatar(
-                    child: Text(
-                  "S",
-                  style: GoogleFonts.almarai(fontSize: 22,fontWeight: FontWeight.w400),
-                )),
+  Widget myDrawer(BuildContext context) {
+
+    return  Drawer(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15.0),
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => Profile(
+                                  userName: name.toString(),
+                                  email: email.toString(),
+                                  profile_url: image_url.toString(),
+                                ))),
+                    child: ClipOval(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        child: image_url != null?   Image.network(
+                          image_url.toString(),
+                          height: 40,
+                        ):Icon(Icons.person_2_rounded),)
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        context.read<AuthCubit>().saveUserCredentiails();
+                      },
+                      icon: const Icon(
+                        Icons.location_on_outlined,
+                        size: 28,
+                      )),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MyRecipe()));
+                    },
+                    child: Icon(Icons.save)
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.25),
+                  IconButton(
+                    onPressed: () async {
+                      final result =
+                          await context.read<AuthCubit>().logoutUser();
+
+                      if (result == false) {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()),
+                            (route) => false);
+                      }
+                    },
+                    icon: const Icon(
+                      Icons.logout,
+                      color: Colors.red,
+                      size: 21,
+                    ),
+                  )
+                ],
               ),
-              IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.location_on_outlined,size: 28,)),
-              const SizedBox(
-                height: 2,
-              ),
-             GestureDetector(
-              onTap: (){
-                Navigator.push(context,MaterialPageRoute(builder: (context)=>MyRecipe()));
-              },
-              child:Image.asset("assets/icons/recipe.png",height: 25,),
-             ),
-               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.28
-              ),
-              const Icon(
-                Icons.logout,
-                color: Colors.red,
-                size: 21,
-              ),
-            ],
-          ),
-        ),
-      );
+            ),
+          );
   }
 
   NavigationBar myNavigationBarr() {

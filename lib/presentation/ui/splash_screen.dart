@@ -1,8 +1,25 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'dart:async';
 
-class SplashScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:fridge_to_feast/keys/auth_keys.dart';
+import 'package:fridge_to_feast/presentation/home_page.dart';
+import 'package:fridge_to_feast/presentation/ui/auth_ui/loginpage.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    whereToGo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,5 +35,28 @@ class SplashScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+    void whereToGo() async {
+    final sharePref = await SharedPreferences.getInstance();
+    var isLoggedIn = sharePref.getBool(AuthKeys.LOGGEDIN);
+    print("is looged in: ${isLoggedIn}");
+    if (isLoggedIn != null) {
+      if (isLoggedIn == true) {
+        Timer(
+            const Duration(seconds: 3),
+            () => Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) =>  HomePageScreen())));
+      } else {
+        Timer(
+            const Duration(seconds: 3),
+            () => Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) =>  LoginPage())));
+      }
+    } else {
+      Timer(
+          const Duration(seconds: 3),
+          () => Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) =>  LoginPage())));
+    }
   }
 }

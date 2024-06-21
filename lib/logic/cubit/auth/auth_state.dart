@@ -1,5 +1,5 @@
 part of 'auth_cubit.dart';
-
+// TODO: handle intialization state.
 sealed class AuthState extends Equatable {
   const AuthState();
 
@@ -7,16 +7,14 @@ sealed class AuthState extends Equatable {
   List<Object> get props => [];
 }
 
-final class AuthInitial extends AuthState {}
-final class AuthAuthenticated extends AuthState {
-  final String message;
-  const AuthAuthenticated({required this.message});
-    List<Object> get props => [message];
+class  AuthInital extends AuthState{}
+final class AuthAuthenticatedState extends AuthState {
+  
 }
-final class AuthUnAuthenticated extends AuthState {
+final class AuthErrorState extends AuthState {
   final String message;
-const AuthUnAuthenticated({required this.message});
+const AuthErrorState({required this.message});
     List<Object> get props => [message];
 
 }
-final class AuthLoading extends AuthState {}
+final class AuthLoadingState extends AuthState {}

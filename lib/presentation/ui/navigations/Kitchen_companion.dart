@@ -76,8 +76,15 @@ class _KitchenCompanionState extends State<KitchenCompanion> {
                     } else if (state is KitchenCampanionEmptyState) {
                       return SizedBox(
                           height: MediaQuery.of(context).size.height * 0.7,
-                          child: const Center(
-                              child: Text("Type some thing to begin the chat !!")));
+                          child:  Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Lottie.asset("assets/animations/chat-bot.json",height: 120),
+                                  SizedBox(height: 10,),
+                                  Text("Type some thing to begin the chat !!",style: GoogleFonts.alexandria(fontSize: 13,fontWeight: FontWeight.w500,color: const Color.fromARGB(255, 166, 66, 184)),),
+                                ],
+                              )));
                     } 
                     else if (state is KitchenCampanionErrorState) {
                       return SizedBox(
@@ -269,3 +276,7 @@ class SaveRecipe extends StatelessWidget{
   }
   
 }
+
+
+
+

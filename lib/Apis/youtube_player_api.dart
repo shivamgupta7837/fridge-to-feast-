@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:fridge_to_feast/Apis/api_keys.dart';
+import 'package:fridge_to_feast/keys/api_keys.dart';
 import 'package:fridge_to_feast/models/youtube_player_model.dart';
 import 'package:http/http.dart' as http;
 class YoutubePlayerApi{

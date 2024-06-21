@@ -1,13 +1,15 @@
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/firebase_options.dart';
 import 'package:fridge_to_feast/logic/bloc/grocery_items/grocery_items_bloc.dart';
+import 'package:fridge_to_feast/logic/cubit/auth/auth_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/kitchen_campanion/kitchen_campanion_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/my_recipe/my_recipe_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/youtube_player/youtube_player_cubit.dart';
-import 'package:fridge_to_feast/presentation/ui/auth_ui/loginpage.dart';
+import 'package:fridge_to_feast/presentation/ui/splash_screen.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +20,7 @@ void main() async{
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+  // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   runApp(const MyApp());
 }
 
@@ -39,6 +42,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<MyRecipeCubit>(
           create: (context) => MyRecipeCubit(),
         ),
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(),
+        ),
       ],
       child: MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -46,7 +52,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginPage()
+      home: const SplashScreen()
     ),
     );
   }

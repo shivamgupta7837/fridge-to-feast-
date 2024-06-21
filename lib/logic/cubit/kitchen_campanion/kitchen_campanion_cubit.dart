@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fridge_to_feast/Apis/api_keys.dart';
+import 'package:fridge_to_feast/keys/api_keys.dart';
 import 'package:fridge_to_feast/models/kitchen_campanion_model.dart';
 import 'package:fridge_to_feast/models/my_recipies_model.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';

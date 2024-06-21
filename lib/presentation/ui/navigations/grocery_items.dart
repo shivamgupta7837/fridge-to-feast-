@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/logic/bloc/grocery_items/grocery_items_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class GroceryItems extends StatefulWidget {
   GroceryItems({
@@ -93,7 +95,15 @@ class _GroceryItemsState extends State<GroceryItems> {
                         });
                   }else if(state is GroceryItemsEmptyState){
                     return Center(
-                      child: Text("Add grocery items"),
+                      child: Column(
+                        children: [
+                          Lottie.asset(
+                          "assets/animations/empty_list.json",
+                          height: 100
+                        ),
+                             Text("Add grocery items",style: GoogleFonts.alexandria(color: const Color.fromARGB(255, 166, 66, 184),fontWeight: FontWeight.w600)),
+                        ],
+                      ),
                     );
                   }
                   else if(state is GroceryItemsErrorState){
@@ -101,7 +111,16 @@ class _GroceryItemsState extends State<GroceryItems> {
                   }
                    else {
                     return Center(
-                      child: Text("Add grocery items"),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                           Lottie.asset(
+                          "assets/animations/empty_list.json",
+                          height: 130
+                        ),
+                          Text("Add grocery items",style: GoogleFonts.alexandria(color: const Color.fromARGB(255, 166, 66, 184),fontWeight: FontWeight.w400),),
+                        ],
+                      ),
                     );
                   }
                 },

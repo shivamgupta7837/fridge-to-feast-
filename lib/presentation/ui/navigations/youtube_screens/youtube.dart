@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/Apis/youtube_player_api.dart';
 import 'package:fridge_to_feast/logic/cubit/youtube_player/youtube_player_cubit.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/youtube_screens/youtube_player.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Youtube extends StatelessWidget {
    Youtube({
@@ -13,12 +14,12 @@ class Youtube extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
              Form(
                       child: TextFormField(
@@ -41,15 +42,29 @@ class Youtube extends StatelessWidget {
                   return _suggestedSearches(context,state);
                 }else if(state is YoutubeSearchingLoadingState){
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child:CircularProgressIndicator(color: Colors.deepPurple,strokeWidth: 2.8,),
                   );
                 }
                 else if(state is YoutubeSearchingErrorState){
                   return Center(child: Text("${state.message.toString()}"),);
                 }else if(state is YoutubeSearchingEmptyState){
-                  return Center(child: Text("Search some videos"));
+                  return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.search),
+                          SizedBox(width: 10,),
+                          Text("Search some videos",style: GoogleFonts.alexandria(fontSize: 15),),
+                        ],
+                      ),
+                    ],
+                  );
                 }else{
-                  return Text("data");
+                  return Text("Ooops Something went wrong !!");
                 }
               },
             ),
