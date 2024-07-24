@@ -39,7 +39,6 @@ class _SplashScreenState extends State<SplashScreen> {
     void whereToGo() async {
     final sharePref = await SharedPreferences.getInstance();
     var isLoggedIn = sharePref.getBool(AuthKeys.LOGGEDIN);
-    print("is looged in: ${isLoggedIn}");
     if (isLoggedIn != null) {
       if (isLoggedIn == true) {
         Timer(

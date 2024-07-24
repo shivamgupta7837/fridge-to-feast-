@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginService {
@@ -14,15 +16,6 @@ class LoginService {
     }
   }
 
-  Future<User> getCredentialsFromGoogleAccount() async {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      print("user ${user!.displayName}");
-      return user;
-    } catch (e) {
-      throw Exception('from user credential : No user signed in');
-    }
-  }
 
   Future<bool> isUserLoggedIn() async {
     return await GoogleSignIn().isSignedIn();

@@ -34,7 +34,6 @@ dependencies:
   equatable: ^2.0.5
   firebase_auth: ^4.20.0
   firebase_core: ^2.30.0
-  firebase_database: ^10.5.7
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.5
@@ -46,6 +45,8 @@ dependencies:
   regexpattern: ^2.6.0
   shared_preferences: 2.2.3
   youtube_player_flutter: ^9.0.1
+  cloud_firestore: ^4.17.5
+  uuid: 4.4.2
 
 dev_dependencies:
   flutter_lints: ^3.0.0
@@ -67,6 +68,7 @@ flutter:
     - assets/logos/
     - assets/animations/
     - assets/icons/
+    - assets/features/
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -11,18 +11,20 @@ sealed class GroceryItemsEvent extends Equatable {
 class AddGroceryItemsEvent extends GroceryItemsEvent {
   final String item;
   final String expiryDate;
+  final int id;
+  final int quantity;
   
-  AddGroceryItemsEvent( {required  this.item,required this.expiryDate,});
+  const AddGroceryItemsEvent( {required  this.item,required this.expiryDate,required this.id, required this.quantity});
 
-  List<Object> get props => [item,expiryDate];
+  List<Object> get props => [item,expiryDate,id,quantity];
   
 }
 
 class DeleteGroceryItemsEvent extends GroceryItemsEvent {
-  final int index;
+  final int id;
 
-  DeleteGroceryItemsEvent({required this.index});
-  List<Object> get props => [index];
+  DeleteGroceryItemsEvent({required this.id});
+  List<Object> get props => [id];
 
 }
 
@@ -30,12 +32,16 @@ class DeleteGroceryItemsEvent extends GroceryItemsEvent {
 class UpdateGroceryItemsEvent extends GroceryItemsEvent {
   final String updateitem;
   final String updateExpiryDate;
+  final int id;
   int index;
-  UpdateGroceryItemsEvent({required  this.updateitem,required this.index,required this.updateExpiryDate});
+  int quantity;
+  UpdateGroceryItemsEvent( {required this.id,required  this.updateitem,required this.index,required this.updateExpiryDate,required this.quantity,});
 
-  List<Object> get props => [updateitem,updateExpiryDate,index];
+  List<Object> get props => [updateitem,updateExpiryDate,index,id,quantity];
 }
 
 class ReadGroceryItemsEvent extends GroceryItemsEvent {
   
 }
+
+

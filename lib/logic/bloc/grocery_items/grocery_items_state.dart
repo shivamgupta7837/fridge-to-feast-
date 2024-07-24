@@ -18,16 +18,17 @@ class GroceryItemsLoadingState extends GroceryItemsState {
 }
 
 class GroceryItemsLoadedState extends GroceryItemsState {
-   final List<Map<String,dynamic>> listOfItems;
+   final List<Item> listOfItems;
    const GroceryItemsLoadedState({required this.listOfItems});
 
-   
-     List<Object> get props => [listOfItems];
+     @override
+       List<Object> get props => [listOfItems];
 }
 
 class GroceryItemsErrorState extends GroceryItemsState {
 final String message;
-GroceryItemsErrorState({required this.message});
+const GroceryItemsErrorState({required this.message});
 
-List<Object> get props => [message];
+@override
+  List<Object> get props => [message];
 }

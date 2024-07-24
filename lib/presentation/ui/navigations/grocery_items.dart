@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/logic/bloc/grocery_items/grocery_items_bloc.dart';
+import 'package:fridge_to_feast/models/grocery_items_model.dart';
+import 'package:fridge_to_feast/repositary/firebase%20database/grocery_list_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
@@ -15,18 +16,22 @@ class GroceryItems extends StatefulWidget {
 }
 
 class _GroceryItemsState extends State<GroceryItems> {
-
   final _itemsController = TextEditingController();
   final _expiryDateController = TextEditingController();
+  final _quantityController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
-@override
+  @override
+  void initState() {
+    super.initState();
+    context.read<GroceryItemsBloc>().add(ReadGroceryItemsEvent());
+  }
 
+  @override
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-     
       child: Column(
         children: [
           Container(
@@ -35,19 +40,42 @@ class _GroceryItemsState extends State<GroceryItems> {
               padding: const EdgeInsets.all(10),
               child: BlocBuilder<GroceryItemsBloc, GroceryItemsState>(
                 builder: (context, state) {
-                  if (state is GroceryItemsLoadedState && state.listOfItems.isNotEmpty) {
-                    final items = state.listOfItems;
+                  if (state is GroceryItemsLoadedState &&
+                      state.listOfItems.isNotEmpty) {
                     return ListView.separated(
                         separatorBuilder: (context, index) => const Divider(),
-                        itemCount: items.length,
+                        itemCount: state.listOfItems.length,
                         itemBuilder: (context, index) {
-                          final itemName = state.listOfItems[index]["item"];
-                          final expiryDate =
-                              state.listOfItems[index]["expiry-date"];
+                          String? itemName = state.listOfItems[index].itemName;
+                          String? expiryDate =
+                              state.listOfItems[index].expiryDate;
+                          int? quantity = state.listOfItems[index].quantity;
+                          int? id = state.listOfItems[index].groceryId;
+
                           return ListTile(
-                              leading: const Icon(Icons.shopping_cart),
-                              title: Text('$itemName'),
-                              subtitle: Text('Expiry Date: $expiryDate'),
+                              title: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '$itemName',
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  Text(
+                                    " Quantity: ${quantity.toString()} kg",
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w400),
+                                  )
+                                ],
+                              ),
+                              subtitle: Text(
+                                'Exp. Date: $expiryDate',
+                                style: GoogleFonts.poppins(
+                                    fontSize: 12, fontWeight: FontWeight.w400),
+                              ),
                               trailing: IconButton(
                                 icon: const Icon(Icons.more_vert),
                                 onPressed: () => showDialog(
@@ -63,8 +91,7 @@ class _GroceryItemsState extends State<GroceryItems> {
                                                         context: context,
                                                         isEdittable: true,
                                                         index: index,
-                                                        state:state
-                                                        );
+                                                        state: state);
                                                   },
                                                   child: const Text(
                                                       "Rename Item")),
@@ -75,7 +102,7 @@ class _GroceryItemsState extends State<GroceryItems> {
                                                             GroceryItemsBloc>()
                                                         .add(
                                                             DeleteGroceryItemsEvent(
-                                                                index: index));
+                                                                id: id!));
                                                     Navigator.pop(context);
                                                   },
                                                   child: const Text(
@@ -90,35 +117,25 @@ class _GroceryItemsState extends State<GroceryItems> {
                                         ),
                                       );
                                     }),
-                              )
-                              );
+                              ));
                         });
-                  }else if(state is GroceryItemsEmptyState){
-                    return Center(
-                      child: Column(
-                        children: [
-                          Lottie.asset(
-                          "assets/animations/empty_list.json",
-                          height: 100
-                        ),
-                             Text("Add grocery items",style: GoogleFonts.alexandria(color: const Color.fromARGB(255, 166, 66, 184),fontWeight: FontWeight.w600)),
-                        ],
-                      ),
-                    );
-                  }
-                  else if(state is GroceryItemsErrorState){
+                  } else if (state is GroceryItemsLoadingState) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is GroceryItemsErrorState) {
                     return Text(state.message);
-                  }
-                   else {
+                  } else {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                           Lottie.asset(
-                          "assets/animations/empty_list.json",
-                          height: 130
-                        ),
-                          Text("Add grocery items",style: GoogleFonts.alexandria(color: const Color.fromARGB(255, 166, 66, 184),fontWeight: FontWeight.w400),),
+                          Lottie.asset("assets/animations/empty_list.json",
+                              height: 130),
+                          Text(
+                            "List is Empty",
+                            style: GoogleFonts.alexandria(
+                                color: const Color.fromARGB(255, 166, 66, 184),
+                                fontWeight: FontWeight.w400),
+                          ),
                         ],
                       ),
                     );
@@ -139,7 +156,7 @@ class _GroceryItemsState extends State<GroceryItems> {
         children: [
           FloatingActionButton(
               tooltip: "Add Grocery",
-              onPressed: () {
+              onPressed: () async {
                 _showAlertDialogBox(context: context, isEdittable: false);
               },
               child: Icon(Icons.add))
@@ -152,11 +169,8 @@ class _GroceryItemsState extends State<GroceryItems> {
       {required BuildContext context,
       required bool isEdittable,
       int index = 0,
-      dynamic state
-      }) {
-        if(state is GroceryItemsLoadedState){
-
-        }
+      dynamic state}) {
+    if (state is GroceryItemsLoadedState) {}
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -171,51 +185,15 @@ class _GroceryItemsState extends State<GroceryItems> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please add Product name ";
-                          }
-                        },
-                        controller: _itemsController,
-                        decoration: InputDecoration(
-                            label: isEdittable == false
-                                ? const Text("Add Items")
-                                : const Text("Update Items"),
-                            hintText: isEdittable == false
-                                ? "Ex: Tomatoes, Bread, Suger"
-                                : "",
-                            hintStyle: TextStyle(color: Colors.grey[400])),
-                      ),
+                      _itemTextField(isEdittable),
                       const SizedBox(
                         height: 10,
                       ),
-                      TextFormField(
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Please add Expiry date of product ";
-                          }
-                        },
-                        controller: _expiryDateController,
-                        decoration: InputDecoration(
-                            label: isEdittable == false
-                                ? const Text("Add expiry date")
-                                : const Text("Update expiry date"),
-                            hintText:
-                                isEdittable == false ? "Ex: 02/12/2024" : "",
-                            isDense: true,
-                            hintStyle: TextStyle(color: Colors.grey[400])),
-                        readOnly: true,
-                        onTap: () async {
-                          DateTime? date = await showDatePicker(
-                            firstDate: DateTime.now(),
-                            lastDate: DateTime(2030),
-                            context: context,
-                          );
-                          _expiryDateController.text =
-                              date.toString().split(" ")[0];
-                        },
+                      _quantityTextField(isEdittable),
+                      const SizedBox(
+                        height: 10,
                       ),
+                      _expiryDateTextField(isEdittable, context),
                     ],
                   ),
                 )
@@ -232,18 +210,24 @@ class _GroceryItemsState extends State<GroceryItems> {
                   if (isEdittable == false) {
                     context.read<GroceryItemsBloc>().add(AddGroceryItemsEvent(
                         item: _itemsController.text,
-                        expiryDate: _expiryDateController.text));
+                        expiryDate: _expiryDateController.text,
+                        id: DateTime.now().millisecondsSinceEpoch,
+                        quantity: int.parse(_quantityController.text)));
                     _expiryDateController.clear();
                     _itemsController.clear();
+                    _quantityController.clear();
                     Navigator.of(context).pop();
                   } else {
                     context.read<GroceryItemsBloc>().add(
                         UpdateGroceryItemsEvent(
                             updateitem: _itemsController.text,
                             index: index,
-                            updateExpiryDate: _expiryDateController.text));
+                            updateExpiryDate: _expiryDateController.text,
+                            id: DateTime.now().millisecondsSinceEpoch,
+                            quantity: int.parse(_quantityController.text)));
                     _expiryDateController.clear();
                     _itemsController.clear();
+                    _quantityController.clear();
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   }
@@ -258,6 +242,74 @@ class _GroceryItemsState extends State<GroceryItems> {
             ),
           ],
         );
+      },
+    );
+  }
+
+  TextFormField _itemTextField(bool isEdittable) {
+    return TextFormField(
+      autocorrect: true,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Please add Product name ";
+        }
+        return null;
+      },
+      controller: _itemsController,
+      decoration: InputDecoration(
+          label: isEdittable == false
+              ? const Text("Add Items")
+              : const Text("Update Items"),
+          hintText: isEdittable == false ? "Ex: Tomatoes, Bread, Suger" : "",
+          hintStyle: TextStyle(color: Colors.grey[400])),
+    );
+  }
+
+  TextFormField _quantityTextField(bool isEdittable) {
+    return TextFormField(
+      autocorrect: true,
+      keyboardType: TextInputType.number,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Please add  Quantity ";
+        }
+      },
+      controller: _quantityController,
+      decoration: InputDecoration(
+          label: isEdittable == false
+              ? const Text("Add Quantity")
+              : const Text("Update Quantity"),
+          hintText: isEdittable == false ? "1 kg" : "",
+          hintStyle: TextStyle(color: Colors.grey[400])),
+    );
+  }
+
+  TextFormField _expiryDateTextField(bool isEdittable, BuildContext context) {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return "Please add expiry date of product ";
+        } else if (value == "null") {
+          return "Expiry date of product can't be null ";
+        }
+        return null;
+      },
+      controller: _expiryDateController,
+      decoration: InputDecoration(
+          label: isEdittable == false
+              ? const Text("Add expiry date")
+              : const Text("Update expiry date"),
+          hintText: isEdittable == false ? "Ex: 02/12/2024" : "",
+          isDense: true,
+          hintStyle: TextStyle(color: Colors.grey[400])),
+      readOnly: true,
+      onTap: () async {
+        DateTime? date = await showDatePicker(
+          firstDate: DateTime.now(),
+          lastDate: DateTime(2030),
+          context: context,
+        );
+        _expiryDateController.text = date.toString().split(" ")[0];
       },
     );
   }

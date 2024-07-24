@@ -70,7 +70,7 @@ class LoginPage extends StatelessWidget {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               backgroundColor: Colors.deepPurple.shade300,
                               content: Text(
-                                "Not be able to Login: ${await userLogin.isUserLoggedIn()}",
+                                "Not be able to Login",
                                 style: GoogleFonts.roboto(
                                     fontSize: 16, fontWeight: FontWeight.w500),
                               ),

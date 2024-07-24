@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/logic/cubit/auth/auth_cubit.dart';
+import 'package:fridge_to_feast/models/user_model.dart';
 import 'package:fridge_to_feast/presentation/ui/auth_ui/loginpage.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/Kitchen_companion.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/grocery_items.dart';
@@ -46,20 +47,52 @@ class _HomePageScreenState extends State<HomePageScreen> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-     
+     backgroundColor: Colors.white,
         shadowColor: Colors.black,
-        elevation: 5,
+        elevation: 0.5,
         foregroundColor: Colors.black,
         title: Text(
           titleOfNavigationScreens[currentPageIndex],
-          style: GoogleFonts.pacifico(
+          style: GoogleFonts.poppins(
               fontSize: 18,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w400,
                       ),
         ),
+        actions: [
+               GestureDetector(
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => MyRecipe()));
+                    },
+                    child: Icon(Icons.download_for_offline_outlined,size: 25,)
+                  ),
+                  SizedBox(width: 13,),
+           Padding(
+             padding: const EdgeInsets.only(right:10.0),
+             child: GestureDetector(
+                      onTap: ()async{
+                        
+                       LocalRepo repo = LocalRepo();
+    final details = await repo.getUserCredentials();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => Profile(
+                                    userName: details.name.toString(),
+                                    email: details.email.toString(),
+                                    profile_url: details.profileUrl.toString(),
+                                  )));
+                        },
+                                  
+                      child: ClipOval(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: Icon(Icons.person))
+                    ),
+           ),
+        ],
       ),
       body: SafeArea(
         child: <Widget>[
@@ -71,79 +104,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
         ][currentPageIndex],
       ),
       bottomNavigationBar: myNavigationBarr(),
-      drawer: Container(
-        margin: const EdgeInsets.only(top: 40, bottom: 400),
-        width: MediaQuery.of(context).size.width * 0.2,
-        child: myDrawer(context),
-      ),
     );
-  }
-
-  Widget myDrawer(BuildContext context) {
-
-    return  Drawer(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 15.0),
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => Profile(
-                                  userName: name.toString(),
-                                  email: email.toString(),
-                                  profile_url: image_url.toString(),
-                                ))),
-                    child: ClipOval(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        child: image_url != null?   Image.network(
-                          image_url.toString(),
-                          height: 40,
-                        ):Icon(Icons.person_2_rounded),)
-                  ),
-                  IconButton(
-                      onPressed: () {
-                        context.read<AuthCubit>().saveUserCredentiails();
-                      },
-                      icon: const Icon(
-                        Icons.location_on_outlined,
-                        size: 28,
-                      )),
-                  const SizedBox(
-                    height: 2,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MyRecipe()));
-                    },
-                    child: Icon(Icons.save)
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.25),
-                  IconButton(
-                    onPressed: () async {
-                      final result =
-                          await context.read<AuthCubit>().logoutUser();
-
-                      if (result == false) {
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()),
-                            (route) => false);
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.logout,
-                      color: Colors.red,
-                      size: 21,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
   }
 
   NavigationBar myNavigationBarr() {
@@ -153,6 +114,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
             currentPageIndex = index;
           });
         },
+        backgroundColor: Colors.white,
         indicatorColor: Colors.deepPurple.shade200,
         selectedIndex: currentPageIndex,
         destinations: <Widget>[
