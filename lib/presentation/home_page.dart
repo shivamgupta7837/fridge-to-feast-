@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fridge_to_feast/logic/cubit/auth/auth_cubit.dart';
-import 'package:fridge_to_feast/models/user_model.dart';
-import 'package:fridge_to_feast/presentation/ui/auth_ui/loginpage.dart';
-import 'package:fridge_to_feast/presentation/ui/navigations/Kitchen_companion.dart';
-import 'package:fridge_to_feast/presentation/ui/navigations/grocery_items.dart';
-import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/my_recipe.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/kitchen_companion_ui/Kitchen_companion.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/grocery_items/grocery_items.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/recipedetail.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/profile.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/youtube_screens/youtube.dart';
 import 'package:fridge_to_feast/repositary/share_preferences/user_credentials_share_preferences.dart';
@@ -65,7 +61,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                GestureDetector(
                     onTap: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => MyRecipe()));
+                          MaterialPageRoute(builder: (context) => RecipeDetail()));
                     },
                     child: Icon(Icons.download_for_offline_outlined,size: 25,)
                   ),
@@ -123,7 +119,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               Icons.home,
             ),
             icon: Icon(Icons.home_outlined),
-            label: 'Home',
+            label: 'Grocery Items',
           ),
           const NavigationDestination(
             selectedIcon: Icon(Icons.messenger),

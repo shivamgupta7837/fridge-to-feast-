@@ -24,13 +24,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset("assets/logos/splash_Screen_logo.jpg",height: 300,),
-            Text("We Focuses on managing your pantry",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+      //      Text("We Focuses on managing your pantry",style: GoogleFonts.poppins(fontSize: 15,fontWeight: FontWeight.bold),),
           ],
         ),
       ),
@@ -41,10 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
     var isLoggedIn = sharePref.getBool(AuthKeys.LOGGEDIN);
     if (isLoggedIn != null) {
       if (isLoggedIn == true) {
-        Timer(
-            const Duration(seconds: 3),
-            () => Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) =>  HomePageScreen())));
+        // Timer(
+        //     const Duration(seconds: 3),
+        //     () => Navigator.pushReplacement(
+        //         context, MaterialPageRoute(builder: (context) =>  HomePageScreen())));
       } else {
         Timer(
             const Duration(seconds: 3),

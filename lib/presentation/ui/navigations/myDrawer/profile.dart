@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/logic/cubit/auth/auth_cubit.dart';
 import 'package:fridge_to_feast/presentation/ui/auth_ui/loginpage.dart';
-import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/my_recipe.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/recipedetail.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Profile extends StatelessWidget {

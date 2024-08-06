@@ -18,7 +18,8 @@ class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
 
   Future<void> addItems(
       AddGroceryItemsEvent event, Emitter<GroceryItemsState> emit) async {
-    _list.add(Item(
+    try{
+      _list.add(Item(
         groceryId: event.id,
         expiryDate: event.expiryDate,
         itemName: event.item,
@@ -30,38 +31,48 @@ class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
             expiryDate: event.expiryDate,
             itemName: event.item,
             quantity: event.quantity));
+    }catch(e){
+      emit(GroceryItemsErrorState(message: e.toString()));
+    }
   }
 
   Future<void> deleteItems(
       DeleteGroceryItemsEvent event, Emitter<GroceryItemsState> emit) async {
-    // _list.removeWhere((item) => item.groceryId == event.id);
-    _fireStore.deleteDataFromDataBase(id:event.id);
-    // emit(GroceryItemsLoadedState(listOfItems: List.from(_list)));
+   try{ _list.removeWhere((item) => item.groceryId == event.id);
+    _fireStore.deleteDataFromDataBase(item: event.itemName);
+    emit(GroceryItemsLoadedState(listOfItems: List.from(_list)));}
+    catch(e){
+      emit(GroceryItemsErrorState(message: e.toString()));
+    }
   }
 
   Future<void> updateItems(
       UpdateGroceryItemsEvent event, Emitter<GroceryItemsState> emit) async {
-    //   if (event.index < newList.length) {
-    //    	[
-    // 	{
-    // 		"grocery_id": event.id,
-    // 		"expiry_date": {
-    // 			"seconds": event.updateExpiryDate,
-    // 			"nanoseconds": 0000000
-    // 		},
-    // 		"item_name": event.updateitem
-    // 	},
-    // ];
-    //     emit(GroceryItemsLoadedState(listOfItems: List.from(newList)));
-    //   } else {
-    //     emit(GroceryItemsErrorState(message: "Index out of range"));
-    //   }
+       try{
+         _list.removeWhere((item) => item.groceryId == event.id);
+        _list.insert(event.index, Item(
+        groceryId: event.id,
+        expiryDate: event.updateExpiryDate,
+        itemName: event.updateitem,
+        quantity: event.quantity));
+
+        emit(GroceryItemsLoadedState(listOfItems: List.from(_list)));
+
+        _fireStore.updateDataFromDataBase(item:  Item(
+        groceryId: event.id,
+        expiryDate: event.updateExpiryDate,
+        itemName: event.updateitem,
+        quantity: event.quantity),id: event.id,index: event.index);
+       }catch(e){
+        emit(GroceryItemsErrorState(message: e.toString()));
+       }
   }
 
   Future<void> getItems(
       ReadGroceryItemsEvent event, Emitter<GroceryItemsState> emit) async {
     emit(GroceryItemsLoadingState());
     try {
+      _list.clear();
       _list = await _fireStore.getDataFromDataBase();
       if (_list.isEmpty) {
         emit(GroceryItemsEmptyState());

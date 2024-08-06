@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class GroceryListFireStore extends Equatable {
   final CollectionReference _groceriesObj =
       FirebaseFirestore.instance.collection("users");
-  List<dynamic> _oldItems = [];
-  final List<Item> _newList = [];
+  List<dynamic> _groceryListToAddItems = [];
+  final List<Item> _groceryListToGetItems = [];
 
   void saveGroceryToDataBase({required Item items}) async {
     SharedPreferences sharePref = await SharedPreferences.getInstance();
@@ -24,17 +26,11 @@ class GroceryListFireStore extends Equatable {
           .get();
 
       if (isDocExists.exists) {
-        _oldItems = isDocExists.data()!["items"];
-        if (_oldItems.isEmpty) {
+        _groceryListToAddItems = isDocExists.data()!["items"];
+          _groceryListToAddItems.add(items.toJson());
           await document
               .doc(FirebaseCollectionsKeys.groceryItemsDocumentId)
-              .set({"items": []});
-        } else {
-          _oldItems.add(items.toJson());
-          await document
-              .doc(FirebaseCollectionsKeys.groceryItemsDocumentId)
-              .set({"items": _oldItems});
-        }
+              .set({"items": _groceryListToAddItems});
       } else {
         await document.doc(FirebaseCollectionsKeys.groceryItemsDocumentId).set({
           "items": [items.toJson()]
@@ -62,56 +58,59 @@ class GroceryListFireStore extends Equatable {
         return [];
       } else {
         for (var ele in data) {
-          _newList.add(Item.fromJson(ele));
+          _groceryListToGetItems.add(Item.fromJson(ele));
         }
         // print(newList.runtimeType);
       }
-      return _newList;
+      return _groceryListToGetItems;
     } catch (e) {
       throw Exception(e);
     }
   }
 
-
-
-
-void deleteDataFromDataBase({required int id})async{
+  void deleteDataFromDataBase({required Item item }) async {
+    // List<Item> list = [];
     SharedPreferences sharePref = await SharedPreferences.getInstance();
     final uId = sharePref.getString(AuthKeys.USER_ID);
+    final document = _groceriesObj.doc(uId).collection(
+        FirebaseCollectionsKeys.groceryItemsCollectionId.toString());
 
-     final document = _groceriesObj.doc(uId).collection(
-          FirebaseCollectionsKeys.groceryItemsCollectionId.toString());
+    try {
+      document.doc(FirebaseCollectionsKeys.groceryItemsDocumentId).update({"items":FieldValue.arrayRemove([item.toJson()])});
+    } catch (e) {
+      print(e);
+    }
+  }
 
-try{
-  
+  void updateDataFromDataBase({required Item item , required id,required index}) async {
+    SharedPreferences sharePref = await SharedPreferences.getInstance();
+    final uId = sharePref.getString(AuthKeys.USER_ID);
+    final document = _groceriesObj.doc(uId).collection(
+        FirebaseCollectionsKeys.groceryItemsCollectionId.toString());
 
-      DocumentSnapshot<Map<String, dynamic>> docSnapshot = await document
+    try {
+      DocumentSnapshot<Map<String, dynamic>> dataBaseList = await document
           .doc(FirebaseCollectionsKeys.groceryItemsDocumentId)
           .get();
 
- await document.doc(FirebaseCollectionsKeys.groceryItemsDocumentId).update({
-  "items": FieldValue.arrayRemove([id])
- });
-}catch(e){
-  throw Exception(e);
-}
-    //        if (docSnapshot.exists) {
-    //   print('Document does not exist');
-    //   return;
-    // }
+        // print("DataBaseList $dataBaseList");
+        List list = dataBaseList.data()!["items"];
+           list.removeWhere((item) => item["grocery_id"] == id);
+        list.insert(index, item.toJson());
 
-    // final data = docSnapshot.data() as Map<String, dynamic>;
-    // final array = data[arrayField] as List<dynamic>;
-    // final newArray = array.where((item) => item != elementToDelete).toList();
+        // print("updated list $list");
+          await document
+              .doc(FirebaseCollectionsKeys.groceryItemsDocumentId)
+              .set({"items": list});
 
-    // await docRef.update({
-    //   arrayField: newArray,
-    // });
-          
-}
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
-  List<Object?> get props => [_newList, _oldItems, _groceriesObj];
+  List<Object?> get props =>
+      [_groceryListToGetItems, _groceryListToAddItems, _groceriesObj];
 }
 
 

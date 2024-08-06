@@ -13,18 +13,21 @@ class AddGroceryItemsEvent extends GroceryItemsEvent {
   final String expiryDate;
   final int id;
   final int quantity;
-  
-  const AddGroceryItemsEvent( {required  this.item,required this.expiryDate,required this.id, required this.quantity});
+  final String quantityMeasurementUnits;
 
-  List<Object> get props => [item,expiryDate,id,quantity];
+  
+  const AddGroceryItemsEvent({required this.quantityMeasurementUnits,  required  this.item,required this.expiryDate,required this.id, required this.quantity});
+
+  List<Object> get props => [item,expiryDate,id,quantity,quantityMeasurementUnits];
   
 }
 
 class DeleteGroceryItemsEvent extends GroceryItemsEvent {
+  final Item itemName;
   final int id;
 
-  DeleteGroceryItemsEvent({required this.id});
-  List<Object> get props => [id];
+  const DeleteGroceryItemsEvent({required this.itemName,required this.id});
+  List<Object> get props => [itemName,id];
 
 }
 

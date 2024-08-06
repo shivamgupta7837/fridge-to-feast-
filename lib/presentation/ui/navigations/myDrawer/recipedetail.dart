@@ -4,30 +4,42 @@ import 'package:fridge_to_feast/logic/cubit/my_recipe/my_recipe_cubit.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/myDrawer/my_recipe_full_Screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MyRecipe extends StatelessWidget {
-  const MyRecipe({super.key});
+class RecipeDetail extends StatefulWidget {
+  const RecipeDetail({super.key});
 
+  @override
+  State<RecipeDetail> createState() => _RecipeDetailState();
+}
+
+class _RecipeDetailState extends State<RecipeDetail> {
+
+  @override
+  void initState() {
+     context.read<MyRecipeCubit>().getRecipiesFromDataBase();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.grey.shade50,
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          centerTitle: true,
-          // backgroundColor: Colors.grey.shade100,
-          shadowColor: Colors.black,
-          elevation: 5,
-          foregroundColor: Colors.black,
-          title: Text(
-            "My Recipies",
-            style:
-                GoogleFonts.pacifico(fontSize: 18, fontWeight: FontWeight.w300),
-          ),
+         centerTitle: true,
+     backgroundColor: Colors.white,
+        shadowColor: Colors.black,
+        elevation: 0.5,
+        foregroundColor: Colors.black,
+        title: Text(
+          "My Recipies",
+          style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w400,
+                      ),
+        ),
         ),
         body: BlocBuilder<MyRecipeCubit, MyRecipeState>(
           builder: (context, state) {
            if(state is MyRecipeLoadedState){
-            print( state.recipesList[0].title);
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: ListView.separated(
@@ -41,7 +53,7 @@ class MyRecipe extends StatelessWidget {
                       title: Text(title.toString()),
                       trailing: IconButton(
                           icon: const Icon(Icons.delete), onPressed: () {
-                            context.read<MyRecipeCubit>().deleteRecipes(index);
+                            context.read<MyRecipeCubit>().deleteRecipes(state.recipesList[index].id,state.recipesList[index]);
                           }),
                           onTap: (){
                             Navigator.push(context,MaterialPageRoute(builder: (_)=>MyRecipeFullScreen(myRecipe: recipe,title:title)));
@@ -61,13 +73,18 @@ class MyRecipe extends StatelessWidget {
               child: CircularProgressIndicator()
             );
            }
-           else if(state is MyRecipeEmptyState){
-            return const Center(
-              child: Text("List is empty")
-            );
-           }
            else{
-            return Text("Nothing found");
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+
+                children: [
+                  Image.asset("assets/icons/recipe.png",height: 40,),
+                  SizedBox(height: 20,),
+                  Text("No Recpies",style: GoogleFonts.poppins(fontWeight: FontWeight.bold,fontSize: 15),),
+                ],
+              )
+            );
            }
           },
         ));

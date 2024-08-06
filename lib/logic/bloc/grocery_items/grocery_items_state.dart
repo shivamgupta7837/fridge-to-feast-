@@ -19,7 +19,9 @@ class GroceryItemsLoadingState extends GroceryItemsState {
 
 class GroceryItemsLoadedState extends GroceryItemsState {
    final List<Item> listOfItems;
-   const GroceryItemsLoadedState({required this.listOfItems});
+  List<String> quantityMeasurementUnitsList = ['Kg', 'Gm', 'Pkt', 'Lt',"Dozen","Bottle"];
+   
+    GroceryItemsLoadedState({required this.listOfItems});
 
      @override
        List<Object> get props => [listOfItems];

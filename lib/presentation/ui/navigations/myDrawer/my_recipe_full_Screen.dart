@@ -14,25 +14,29 @@ class MyRecipeFullScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         shadowColor: Colors.black,
-        elevation: 5,
+        elevation: 0.5,
+        backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         title: Text(
           title,
-          style: GoogleFonts.pacifico(
+          style: GoogleFonts.poppins(
               fontSize: 18,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w400,
               
         ),
       ),
       ),
       body:SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children:[
-                Text(myRecipe)
-              ]
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children:[
+                  Text(myRecipe,textDirection: TextDirection.ltr,)
+                ]
+              ),
             ),
           ),
         ),

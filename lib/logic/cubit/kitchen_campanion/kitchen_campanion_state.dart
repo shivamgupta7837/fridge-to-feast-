@@ -13,12 +13,13 @@ class KitchenCampanionEmptyState extends KitchenCampanionState {}
 
 class KitchenCampanionLoadingState extends KitchenCampanionState {}
 
+// ignore: must_be_immutable
 class KitchenCampanionLoadedState extends KitchenCampanionState {
-   List<KitchenCampanionModel> user = [];
+   List<Chat> listOfChats = [];
 
   
-   KitchenCampanionLoadedState({required this.user});
-  List<Object> get props => [user];
+   KitchenCampanionLoadedState({required this.listOfChats});
+  List<Object> get props => [listOfChats];
 }
 
 class KitchenCampanionErrorState extends KitchenCampanionState {
