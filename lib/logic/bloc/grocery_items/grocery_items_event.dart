@@ -38,10 +38,17 @@ class UpdateGroceryItemsEvent extends GroceryItemsEvent {
   final int id;
   int index;
   int quantity;
-  UpdateGroceryItemsEvent( {required this.id,required  this.updateitem,required this.index,required this.updateExpiryDate,required this.quantity,});
+  final String quantityMeasurementUnits;
+  UpdateGroceryItemsEvent( {required this.id,required  this.updateitem,required this.index,required this.updateExpiryDate,required this.quantity,required this.quantityMeasurementUnits});
 
-  List<Object> get props => [updateitem,updateExpiryDate,index,id,quantity];
+  List<Object> get props => [updateitem,updateExpiryDate,index,id,quantity,quantityMeasurementUnits];
 }
+
+// class AddQuantityMeasurementUnitsEvent extends GroceryItemsEvent{
+//   final String quantityMeasurementUnits;
+//   AddQuantityMeasurementUnitsEvent({required this.quantityMeasurementUnits}); 
+//   List<Object> get props => [quantityMeasurementUnits];
+// }
 
 class ReadGroceryItemsEvent extends GroceryItemsEvent {
   

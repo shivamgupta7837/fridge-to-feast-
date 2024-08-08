@@ -42,10 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
     var isLoggedIn = sharePref.getBool(AuthKeys.LOGGEDIN);
     if (isLoggedIn != null) {
       if (isLoggedIn == true) {
-        // Timer(
-        //     const Duration(seconds: 3),
-        //     () => Navigator.pushReplacement(
-        //         context, MaterialPageRoute(builder: (context) =>  HomePageScreen())));
+        Timer(
+            const Duration(seconds: 3),
+            () => Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) =>  HomePageScreen())));
       } else {
         Timer(
             const Duration(seconds: 3),

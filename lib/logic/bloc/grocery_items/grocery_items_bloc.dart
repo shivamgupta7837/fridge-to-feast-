@@ -9,12 +9,20 @@ part 'grocery_items_state.dart';
 class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
   List<Item> _list = [];
   final _fireStore = GroceryListFireStore();
+   String unit = "";
   GroceryItemsBloc() : super(GroceryItemsInitial()) {
     on<AddGroceryItemsEvent>(addItems);
     on<DeleteGroceryItemsEvent>(deleteItems);
     on<UpdateGroceryItemsEvent>(updateItems);
     on<ReadGroceryItemsEvent>(getItems);
+    // on<AddQuantityMeasurementUnitsEvent>(addQuantityMeasurementUnits);
   }
+
+
+  // Future<void>addQuantityMeasurementUnits(AddQuantityMeasurementUnitsEvent event, Emitter<GroceryItemsState> emit)async{
+    
+  //   emit(GroceryItemsUnitLoadedState(unit: event.quantityMeasurementUnits));
+  // }
 
   Future<void> addItems(
       AddGroceryItemsEvent event, Emitter<GroceryItemsState> emit) async {
@@ -23,14 +31,15 @@ class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
         groceryId: event.id,
         expiryDate: event.expiryDate,
         itemName: event.item,
-        quantity: event.quantity));
+        quantity: event.quantity, units: event.quantityMeasurementUnits));
     emit(GroceryItemsLoadedState(listOfItems: List.from(_list)));
     _fireStore.saveGroceryToDataBase(
         items: Item(
             groceryId: event.id,
             expiryDate: event.expiryDate,
             itemName: event.item,
-            quantity: event.quantity));
+            quantity: event.quantity,
+            units: event.quantityMeasurementUnits));
     }catch(e){
       emit(GroceryItemsErrorState(message: e.toString()));
     }
@@ -54,7 +63,8 @@ class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
         groceryId: event.id,
         expiryDate: event.updateExpiryDate,
         itemName: event.updateitem,
-        quantity: event.quantity));
+        quantity: event.quantity,
+        units: event.quantityMeasurementUnits));
 
         emit(GroceryItemsLoadedState(listOfItems: List.from(_list)));
 
@@ -62,7 +72,7 @@ class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
         groceryId: event.id,
         expiryDate: event.updateExpiryDate,
         itemName: event.updateitem,
-        quantity: event.quantity),id: event.id,index: event.index);
+        quantity: event.quantity,units: event.quantityMeasurementUnits),id: event.id,index: event.index);
        }catch(e){
         emit(GroceryItemsErrorState(message: e.toString()));
        }

@@ -30,25 +30,29 @@ class Item {
         required this.groceryId,
         required this.expiryDate,
         required this.itemName,
-        required this.quantity
+        required this.quantity,
+        required this.units
     });
 
-    final int? groceryId;
-    final String? expiryDate;
-    final String? itemName;
-     final int? quantity;
+    final int groceryId;
+    final String expiryDate;
+    final String itemName;
+     final int quantity;
+     final String units;
 
     Item copyWith({
         int? groceryId,
         String? expiryDate,
         String? itemName,
-        int? quantity
+        int? quantity,
+        String? units
     }) {
         return Item(
             groceryId: groceryId ?? this.groceryId,
             expiryDate: expiryDate ?? this.expiryDate,
             itemName: itemName ?? this.itemName,
-            quantity:quantity ?? this.quantity
+            quantity:quantity ?? this.quantity,
+            units:units??this.units
         );
     }
 
@@ -57,7 +61,8 @@ class Item {
             groceryId: json["grocery_id"],
             expiryDate: json["expiry_date"],
             itemName: json["item_name"],
-            quantity:json["quantity"]
+            quantity:json["quantity"],
+            units:json["units"]
         );
     }
 
@@ -65,7 +70,8 @@ class Item {
         "grocery_id": groceryId,
         "expiry_date": expiryDate,
         "item_name": itemName,
-        "quantity":quantity
+        "quantity":quantity,
+        "units":units
     };
 
 }

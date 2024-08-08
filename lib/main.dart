@@ -1,20 +1,14 @@
-
-
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fridge_to_feast/firebase_options.dart';
 import 'package:fridge_to_feast/logic/bloc/grocery_items/grocery_items_bloc.dart';
 import 'package:fridge_to_feast/logic/cubit/auth/auth_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/kitchen_campanion/kitchen_campanion_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/my_recipe/my_recipe_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/youtube_player/youtube_player_cubit.dart';
-import 'package:fridge_to_feast/mytest.dart';
 import 'package:fridge_to_feast/presentation/ui/splash_screen.dart';
 import 'package:fridge_to_feast/services/push%20notification/push_notification.dart';
 import 'package:workmanager/workmanager.dart';
@@ -51,11 +45,11 @@ void main() async {
 
     // WorkManager initialization
     Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
-
+    int id = DateTime.now().microsecondsSinceEpoch;
     Workmanager().registerPeriodicTask(
-      Random(2000).toString(),
+      id.toString(),
       'simplePeriodicTask',
-      frequency: Duration(hours: 24),
+      frequency: Duration(hours: 6),
     );
   } catch (e) {
     print("Error from main function: $e");
@@ -103,3 +97,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

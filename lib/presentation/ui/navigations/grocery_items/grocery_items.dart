@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/logic/bloc/grocery_items/grocery_items_bloc.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/grocery_items/update_grocery_items.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 class GroceryItems extends StatefulWidget {
@@ -20,7 +21,7 @@ class _GroceryItemsState extends State<GroceryItems> {
   final _quantityController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
-  final List<String> _items = ['Kg', 'Gm', 'Pkg', 'Lt', "Dozen", "Bottle"];
+  final List<String> _items = ['Kg', 'Gm', 'Pkt', 'Lt', "Dozen", "Bottle"];
 
   // Variable to hold the currently selected item
   String? _selectedItem;
@@ -41,40 +42,48 @@ class _GroceryItemsState extends State<GroceryItems> {
           padding: const EdgeInsets.all(10),
           child: BlocBuilder<GroceryItemsBloc, GroceryItemsState>(
             builder: (context, state) {
+              final currentDate =
+                  DateFormat("yyyy-MM-dd").format(DateTime.now()).toString();
               if (state is GroceryItemsLoadedState &&
                   state.listOfItems.isNotEmpty) {
                 return ListView.separated(
                     separatorBuilder: (context, index) => const Divider(),
                     itemCount: state.listOfItems.length,
                     itemBuilder: (context, index) {
-                      String? itemName = state.listOfItems[index].itemName;
-                      String? expiryDate = state.listOfItems[index].expiryDate;
-                      int? quantity = state.listOfItems[index].quantity;
-                      int? id = state.listOfItems[index].groceryId;
+                      String itemName = state.listOfItems[index].itemName;
+                      String expiryDate = state.listOfItems[index].expiryDate;
+                      int quantity = state.listOfItems[index].quantity;
+                      int id = state.listOfItems[index].groceryId;
+                      String unit = state.listOfItems[index].units;
+                      String status = "";
+                      int oldDate = int.parse(expiryDate.split("-").join(""));
+                      int todaysDay =
+                          int.parse(currentDate.split("-").join(""));
 
+                      if (oldDate == todaysDay) {
+                        status = "Expiring today";
+                      } else if (oldDate < todaysDay) {
+                        status = "Already expired";
+                      }
                       return ListTile(
-                          title: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '$itemName',
-                                style: GoogleFonts.poppins(
-                                    fontSize: 15, fontWeight: FontWeight.w400),
-                              ),
-                              Text(
-                                " Quantity: ${quantity.toString()} kg",
-                                style: GoogleFonts.poppins(
-                                    fontSize: 12, fontWeight: FontWeight.w400),
-                              )
-                            ],
-                          ),
-                          subtitle: Text(
-                            'Exp. Date: $expiryDate',
-                            style: GoogleFonts.poppins(
-                                fontSize: 12, fontWeight: FontWeight.w400),
-                          ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          tileColor: status == "Expiring today"
+                              ? Colors.amber
+                              : status == "Already expired"
+                                  ? Color.fromARGB(255, 212, 50, 38)
+                                  : null,
+                          title: goroceryNameText(itemName, status, quantity,unit),
+                          subtitle: expirationStatus(oldDate, todaysDay, expiryDate, status),
                           trailing: IconButton(
-                            icon: const Icon(Icons.more_vert),
+                            icon: Icon(
+                              Icons.more_vert,
+                              color: status == "Expiring today"
+                                  ? Colors.white
+                                  : status == "Already expired"
+                                      ? Colors.white
+                                      : null,
+                            ),
                             onPressed: () => showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -98,6 +107,7 @@ class _GroceryItemsState extends State<GroceryItems> {
                                                               index: index,
                                                               quantity:
                                                                   quantity!,
+                                                                  units: unit,
                                                             )));
                                               },
                                               child: const Text("Rename Item")),
@@ -129,7 +139,7 @@ class _GroceryItemsState extends State<GroceryItems> {
               } else if (state is GroceryItemsErrorState) {
                 return Text(state.message);
               } else {
-                return Container(
+                return SizedBox(
                   height: MediaQuery.of(context).size.height,
                   child: Center(
                     child: Column(
@@ -154,11 +164,56 @@ class _GroceryItemsState extends State<GroceryItems> {
     );
   }
 
+  Text expirationStatus(int oldDate, int todaysDay, String expiryDate, String status) {
+    return Text(
+                          oldDate > todaysDay
+                              ? 'Expiring on: $expiryDate'
+                              : oldDate < todaysDay
+                                  ? "Already Expired"
+                                  : "Expiring today",
+                          style: GoogleFonts.poppins(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: status == "Expiring today" ||
+                                      status == "Already expired"
+                                  ? Colors.white
+                                  : null),
+                        );
+  }
+
+  Row goroceryNameText(String itemName, String status, int quantity,String unit) {
+    return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              itemName,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  color: status == "Expiring today" ||
+                                          status == "Already expired"
+                                      ? Colors.white
+                                      : null),
+                            ),
+                            Text(
+                              " Quantity: ${quantity.toString()} $unit",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: status == "Expiring today" ||
+                                          status == "Already expired"
+                                      ? Colors.white
+                                      : null),
+                            )
+                          ],
+                        );
+  }
+
   FloatingActionButton addGroceryItemWidget(BuildContext context) {
     return FloatingActionButton(
         tooltip: "Add Grocery",
         onPressed: () async {
-          //_showAlertDialogBox(context: context);
+          _showAlertDialogBox(context: context);
         },
         child: Icon(Icons.add));
   }
@@ -259,7 +314,7 @@ class _GroceryItemsState extends State<GroceryItems> {
               decoration: InputDecoration(
                   isDense: true,
                   label: const Text("Add Quantity"),
-                  hintText: "1 kg",
+                  hintText: "1",
                   hintStyle: TextStyle(color: Colors.grey[400])),
             )),
         SizedBox(

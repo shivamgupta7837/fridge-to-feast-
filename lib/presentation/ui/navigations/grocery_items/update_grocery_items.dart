@@ -11,12 +11,15 @@ class UpdateGroceryItems extends StatefulWidget {
       required this.id,
       required this.quantity,
       required this.index,
-      required this.itemName});
+      required this.itemName,
+      required this.units
+      });
   String itemName;
   String expiryDate;
   int quantity;
   int index;
   int id;
+  String units;
 
   @override
   State<UpdateGroceryItems> createState() => _UpdateGroceryItemsState();
@@ -30,10 +33,11 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
   late TextEditingController expiryDateUpdateController;
 
   late TextEditingController quantityUpdateController;
+  late TextEditingController unitsUpdateController;
 
   String? _selectedItem;
 
-  final List<String> _items = ['Kg', 'Gm', 'Pkg', 'Lt', "Dozen", "Bottle"];
+  final List<String> _items = ['Kg', 'Gm', 'Pkt', 'Lt', "Dozen", "Bottle"];
 
   @override
   void initState() {
@@ -42,6 +46,7 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
     expiryDateUpdateController = TextEditingController(text: widget.expiryDate);
     quantityUpdateController =
         TextEditingController(text: widget.quantity.toString());
+        unitsUpdateController = TextEditingController(text: widget.units);
   }
 
   @override
@@ -102,7 +107,7 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
                                       expiryDateUpdateController.text,
                                   id: widget.id,
                                   quantity: int.parse(
-                                      quantityUpdateController.text)));
+                                      quantityUpdateController.text), quantityMeasurementUnits: _selectedItem!));
                         }
                         Navigator.pop(context);
                         Navigator.pop(context);
@@ -172,7 +177,11 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
                 child: Text(value),
               );
             }).toList(),
-            onChanged: (String? newValue) {},
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedItem = newValue;
+              });
+            },
           ),
         ),
       ],

@@ -30,13 +30,13 @@ class MyRecipeCubit extends Cubit<MyRecipeState> {
 
       emit(MyRecipeLoadedState(recipesList: List.from(_recipeList)));
 
-      // _myRecipesFirestore.saveChatsToDataBase(
-      //     recipies: MyRecipiesModel(
-      //   title: title.toString(),
-      //   recipe: _removeSymbols(recipe.toString()),
-      //   date: date,
-      //   id: id,
-      // ));
+      _myRecipesFirestore.saveChatsToDataBase(
+          recipies: MyRecipiesModel(
+        title: title.toString(),
+        recipe: _removeSymbols(recipe.toString()),
+        date: date,
+        id: id,
+      ));
     } catch (e) {
       
       emit(MyRecipeErrorState(message: e.toString()));

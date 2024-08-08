@@ -76,7 +76,7 @@ class _KitchenCompanionState extends State<KitchenCompanion> {
                         ),
                         Text(
                           "Type some thing to begin the chat !!",
-                          style: GoogleFonts.alexandria(
+                          style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                               color: const Color.fromARGB(255, 166, 66, 184)),
@@ -120,9 +120,10 @@ class _KitchenCompanionState extends State<KitchenCompanion> {
           decoration: InputDecoration(
             isDense: true,
             border: const OutlineInputBorder(),
-            label: const Text(
+            label:  Text(
               "Type to ask your kitchen companion",
-              style: TextStyle(fontWeight: FontWeight.w400),
+              style: GoogleFonts.poppins(fontWeight: FontWeight.w300,fontSize: 
+              14),
             ),
             hintText: "Ex: How to make a cake?",
             hintStyle: TextStyle(color: Colors.grey.shade500),
@@ -143,6 +144,7 @@ class _KitchenCompanionState extends State<KitchenCompanion> {
                       );
               
                   _promptController.clear();
+
                 }
               },
             ),
@@ -213,7 +215,7 @@ class _KitchenCompanionState extends State<KitchenCompanion> {
             ? Text(
                 userData.message.toString(),
                 style: widget.theme.textTheme.bodyLarge!
-                    .copyWith(color: widget.theme.colorScheme.onPrimary),
+                    .copyWith(color: widget.theme.colorScheme.onPrimary,),
               )
             : Container(),
       ),

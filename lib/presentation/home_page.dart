@@ -45,6 +45,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        
         centerTitle: true,
      backgroundColor: Colors.white,
         shadowColor: Colors.black,
