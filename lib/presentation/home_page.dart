@@ -8,7 +8,7 @@ import 'package:fridge_to_feast/repositary/share_preferences/user_credentials_sh
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePageScreen extends StatefulWidget {
-  HomePageScreen({super.key});
+  const HomePageScreen({super.key});
 
   @override
   State<HomePageScreen> createState() => _HomePageScreenState();

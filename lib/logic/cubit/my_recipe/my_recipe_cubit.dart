@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:fridge_to_feast/models/my_recipies_model.dart';
 import 'package:fridge_to_feast/repositary/firebase%20database/kitchen_campanion_database/my_recipies_firestore.dart';
 
@@ -50,8 +51,7 @@ class MyRecipeCubit extends Cubit<MyRecipeState> {
       emit(MyRecipeLoadedState(recipesList: List.from(_getRecipiesList)));
     _myRecipesFirestore.deleteDataFromDataBase(item: recipe);
     } catch (e) {
-      
-      print("some error: $e");
+      debugPrintStack();
       emit(MyRecipeErrorState(message: e.toString()));
     }
   }

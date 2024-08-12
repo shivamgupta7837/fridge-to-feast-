@@ -27,6 +27,7 @@ class Youtube extends StatelessWidget {
             Form(
                 key: _formKey,
                 child: TextFormField(
+                 textInputAction: TextInputAction.done,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "This is field can't be empty";
@@ -112,8 +113,6 @@ class Youtube extends StatelessWidget {
           final videoTitle = state.data.items[index].snippet!.title;
           return GestureDetector(
             onTap: () async {
-              // final obj = YoutubePlayerApi();
-              // await obj.getVideoSearch("how to make cake");
             
                 Navigator.push(
                     context,

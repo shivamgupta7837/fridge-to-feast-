@@ -47,6 +47,7 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
     quantityUpdateController =
         TextEditingController(text: widget.quantity.toString());
         unitsUpdateController = TextEditingController(text: widget.units);
+        _selectedItem = widget.units;
   }
 
   @override
@@ -108,9 +109,9 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
                                   id: widget.id,
                                   quantity: int.parse(
                                       quantityUpdateController.text), quantityMeasurementUnits: _selectedItem!));
+                        Navigator.pop(context);
+                        Navigator.pop(context);
                         }
-                        Navigator.pop(context);
-                        Navigator.pop(context);
                       }),
                 ],
               ),
@@ -150,7 +151,7 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
               keyboardType: TextInputType.number,
               validator: (value) {
                 if (value!.isEmpty) {
-                  return "Please add  Qty ";
+                  return "Please add Qty ";
                 }
                 return null;
               },

@@ -44,6 +44,8 @@ class MyRecipesFirestore extends Equatable {
   Future<List<MyRecipiesModel>> getChatsFromDataBase() async {
     SharedPreferences sharePref = await SharedPreferences.getInstance();
     final uId = sharePref.getString(AuthKeys.USER_ID);
+
+    List data = [];
     try {
       final document = _fireBaseObj.doc(uId).collection(
           FirebaseCollectionsKeys.kitchenCampanionCollectionId.toString());
@@ -51,15 +53,16 @@ class MyRecipesFirestore extends Equatable {
       DocumentSnapshot<Map<String, dynamic>> dataSnapShot = await document
           .doc(FirebaseCollectionsKeys.saveRecipesDocumentnId)
           .get();
-      List data = await dataSnapShot.data()!["savedRecipies"];
-
+ if(dataSnapShot.data() != null){
+       data = await dataSnapShot.data()!["savedRecipies"];
+          }
       if (data.isEmpty) {
         return [];
       } else {
         for (var ele in data) {
           _getRecipies.add(MyRecipiesModel.fromJson(ele));
         }
-        // print(newList.runtimeType);
+        
       }
       return _getRecipies;
     } catch (e) {

@@ -8,7 +8,7 @@ import 'package:lottie/lottie.dart';
 
 // ignore: must_be_immutable
 class KitchenCompanion extends StatefulWidget {
-  KitchenCompanion({
+  const KitchenCompanion({
     super.key,
     required this.theme,
   });
@@ -140,10 +140,13 @@ class _KitchenCompanionState extends State<KitchenCompanion> {
                       messageToGemini: _promptController.text,
                       promt: "bot",
                       date: DateTime.now().toString(),
-                      context: context
+                      typingStatus: true,
+
                       );
               
                   _promptController.clear();
+
+                 
 
                 }
               },
@@ -156,11 +159,12 @@ class _KitchenCompanionState extends State<KitchenCompanion> {
 
   Widget _geminiResponse(Chat gemData, BuildContext context,
       TextEditingController userPrompt, dynamic state) {
-    return Align(
-      alignment: Alignment.centerLeft,
+    return   Align(
+      alignment: Alignment.topLeft,
       child: Container(
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.all(8.0),
+        
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -188,7 +192,7 @@ class _KitchenCompanionState extends State<KitchenCompanion> {
                 : Container()
           ],
         ),
-      ),
+      )
     );
   }
 

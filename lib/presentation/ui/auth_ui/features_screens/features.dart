@@ -13,7 +13,7 @@ class AppFeatures extends StatelessWidget {
       body: Column(
         // mainAxisAlignment: ,
           children: [
-           Container(
+           SizedBox(
             height: MediaQuery.of(context).size.height *0.6,
             width: MediaQuery.of(context).size.width ,
             child: Image.asset("assets/features/feature1.jpg",fit: BoxFit.cover,)),

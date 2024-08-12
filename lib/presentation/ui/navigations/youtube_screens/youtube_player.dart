@@ -4,7 +4,7 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 // ignore: must_be_immutable
 class MyYoutubePlayer extends StatefulWidget {
   final String youtubeVideoId;
-  MyYoutubePlayer({super.key, required this.youtubeVideoId});
+  const MyYoutubePlayer({super.key, required this.youtubeVideoId});
 
   @override
   State<MyYoutubePlayer> createState() => _MyYoutubePlayerState();
@@ -24,7 +24,6 @@ class _MyYoutubePlayerState extends State<MyYoutubePlayer> {
     );
   }
 
-  void _listner() {}
 
   @override
   void deactivate() {

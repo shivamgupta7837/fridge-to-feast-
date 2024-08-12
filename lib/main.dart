@@ -51,7 +51,7 @@ void main() async {
       'simplePeriodicTask',
       frequency: Duration(hours: 6),
     );
-  } catch (e) {
+  } catch (e) { 
     print("Error from main function: $e");
   }
 

@@ -1,15 +1,12 @@
-import 'dart:async';
-import 'dart:math';
+
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:fridge_to_feast/keys/api_keys.dart';
 import 'package:fridge_to_feast/models/kitchen_campanion_model.dart';
 import 'package:fridge_to_feast/models/my_recipies_model.dart';
 import 'package:fridge_to_feast/repositary/firebase%20database/kitchen_campanion_database/kitchen_campanion_firestore.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:lottie/lottie.dart';
 
 part 'kitchen_campanion_state.dart';
 
@@ -32,7 +29,7 @@ class KitchenCampanionCubit extends Cubit<KitchenCampanionState> {
       chats.add(
           Chat(timestamp: date.toString(), sender: promt, message: message));
       emit(KitchenCampanionLoadedState(listOfChats: List.from(chats)));
-    //  _kitchenCampanionFirestore.saveChatsToDataBase(chats:  Chat(timestamp: date.toString(), sender: promt, message: message));
+      _kitchenCampanionFirestore.saveChatsToDataBase(chats:  Chat(timestamp: date.toString(), sender: promt, message: message));
     } catch (e) {
       emit(KitchenCampanionErrorState(message: e.toString()));
     }
@@ -42,23 +39,19 @@ class KitchenCampanionCubit extends Cubit<KitchenCampanionState> {
       {required String messageToGemini,
       required String promt,
       required String date,
-      context}) async {
+      typingStatus}) async {
     try {
-     
-      emit(KitchenCampanionLoadingState());
-     
-      Timer(Duration(seconds: 5), () => print('Timer finished'));
     
-      // final model = GenerativeModel(
-      //     model: 'gemini-1.5-flash', apiKey: _key.getGeminiKey());
-      // final content = [Content.text(messageToGemini)];
-      // final response = await model.generateContent(content);
-      // chats.add(Chat(
-      //     timestamp: date.toString(),
-      //     sender: promt,
-      //     message: _removeSymbols(response.text!.toString())));
+      final model = GenerativeModel(
+          model: 'gemini-1.5-flash', apiKey: _key.getGeminiKey());
+      final content = [Content.text(messageToGemini)];
+      final response = await model.generateContent(content);
+      chats.add(Chat(
+          timestamp: date.toString(),
+          sender: promt,
+          message: _removeSymbols(response.text!.toString())));
       emit(KitchenCampanionLoadedState(listOfChats: List.from(chats)));
-      //  _kitchenCampanionFirestore.saveChatsToDataBase(chats:  Chat(timestamp: date.toString(), sender: promt, message: _removeSymbols(response.text!.toString())));
+       _kitchenCampanionFirestore.saveChatsToDataBase(chats:  Chat(timestamp: date.toString(), sender: promt, message: _removeSymbols(response.text!.toString())));
   
     } catch (e) {
       emit(KitchenCampanionErrorState(message: e.toString()));

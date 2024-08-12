@@ -11,7 +11,10 @@ final class KitchenCampanionInitial extends KitchenCampanionState {}
 
 class KitchenCampanionEmptyState extends KitchenCampanionState {}
 
-class KitchenCampanionLoadingState extends KitchenCampanionState {}
+class KitchenCampanionLoadingState extends KitchenCampanionState {
+
+}
+
 
 // ignore: must_be_immutable
 class KitchenCampanionLoadedState extends KitchenCampanionState {
@@ -19,6 +22,7 @@ class KitchenCampanionLoadedState extends KitchenCampanionState {
 
   
    KitchenCampanionLoadedState({required this.listOfChats});
+  @override
   List<Object> get props => [listOfChats];
 }
 

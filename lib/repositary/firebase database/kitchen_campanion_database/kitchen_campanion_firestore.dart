@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fridge_to_feast/keys/auth_keys.dart';
@@ -26,12 +25,14 @@ class KitchenCampanionFirestore extends Equatable {
 
       if (isDocExists.exists) {
         _chatList = isDocExists.data()!["kitchenCampanion"];
-          _chatList.add(chats.toJson());
-          await document
-              .doc(FirebaseCollectionsKeys.kitchenCampanionDocumentnId)
-              .set({"kitchenCampanion": _chatList});
+        _chatList.add(chats.toJson());
+        await document
+            .doc(FirebaseCollectionsKeys.kitchenCampanionDocumentnId)
+            .set({"kitchenCampanion": _chatList});
       } else {
-        await document.doc(FirebaseCollectionsKeys.kitchenCampanionDocumentnId).set({
+        await document
+            .doc(FirebaseCollectionsKeys.kitchenCampanionDocumentnId)
+            .set({
           "kitchenCampanion": [chats.toJson()]
         });
       }
@@ -43,6 +44,7 @@ class KitchenCampanionFirestore extends Equatable {
   Future<List<Chat>> getChatsFromDataBase() async {
     SharedPreferences sharePref = await SharedPreferences.getInstance();
     final uId = sharePref.getString(AuthKeys.USER_ID);
+    List data = [];
     try {
       final document = _fireBaseObj.doc(uId).collection(
           FirebaseCollectionsKeys.kitchenCampanionCollectionId.toString());
@@ -50,7 +52,9 @@ class KitchenCampanionFirestore extends Equatable {
       DocumentSnapshot<Map<String, dynamic>> dataSnapShot = await document
           .doc(FirebaseCollectionsKeys.kitchenCampanionDocumentnId)
           .get();
-      List data = await dataSnapShot.data()!["kitchenCampanion"];
+      if (dataSnapShot.data() != null) {
+        data = await dataSnapShot.data()!["kitchenCampanion"];
+      }
 
       if (data.isEmpty) {
         return [];
@@ -66,8 +70,6 @@ class KitchenCampanionFirestore extends Equatable {
     }
   }
 
-
   @override
-  List<Object?> get props =>
-      [_getChats, _chatList, _fireBaseObj];
+  List<Object?> get props => [_getChats, _chatList, _fireBaseObj];
 }

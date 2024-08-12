@@ -19,7 +19,7 @@ class Notifications {
         iOS: null,
         linux: null);
     await _flutter_local_notifications.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: (detail) => null);
+        onDidReceiveNotificationResponse: (detail) {});
   }
 
   Future<void> simpleNotification() async {

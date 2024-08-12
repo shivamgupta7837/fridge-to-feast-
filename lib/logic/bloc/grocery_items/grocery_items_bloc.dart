@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:fridge_to_feast/models/grocery_items_model.dart';
 import 'package:fridge_to_feast/repositary/firebase%20database/grocery_list_firestore.dart';
 
@@ -91,6 +92,7 @@ class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
         emit(GroceryItemsLoadedState(listOfItems: List.from(_list)));
       }
     } catch (e) {
+      debugPrint("grocery items bloc");
       emit(GroceryItemsErrorState(message: e.toString()));
     }
   }

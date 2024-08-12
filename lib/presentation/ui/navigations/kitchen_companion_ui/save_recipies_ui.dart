@@ -30,6 +30,7 @@ class SaveRecipe extends StatelessWidget {
                               content: Form(
                                 key: _formKey,
                                 child: TextFormField(
+                                  keyboardType: TextInputType.text,
                                   autocorrect: true,
                                   validator: (value) {
                                     if (value!.isEmpty) {
@@ -72,6 +73,7 @@ class SaveRecipe extends StatelessWidget {
                                           duration: const Duration(seconds: 2),
                                         ));
                                       }
+                                      Navigator.pop(context);
                                     },
                                     child: Text("Save")),
                                 TextButton(

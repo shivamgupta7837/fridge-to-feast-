@@ -44,7 +44,7 @@ class GroceryListFireStore extends Equatable {
   Future<List<Item>> getDataFromDataBase() async {
     SharedPreferences sharePref = await SharedPreferences.getInstance();
     final uId = sharePref.getString(AuthKeys.USER_ID);
-
+ List data = [];
     try {
       final document = _groceriesObj.doc(uId).collection(
           FirebaseCollectionsKeys.groceryItemsCollectionId.toString());
@@ -52,7 +52,11 @@ class GroceryListFireStore extends Equatable {
       DocumentSnapshot<Map<String, dynamic>> dataSnapShot = await document
           .doc(FirebaseCollectionsKeys.groceryItemsDocumentId)
           .get();
-      List data = await dataSnapShot.data()!["items"];
+
+          if(dataSnapShot.data() != null){
+                data = await dataSnapShot.data()!["items"];
+          }
+
 
       if (data.isEmpty) {
         return [];
@@ -64,6 +68,7 @@ class GroceryListFireStore extends Equatable {
       }
       return _groceryListToGetItems;
     } catch (e) {
+      debugPrintStack();
       throw Exception(e);
     }
   }
