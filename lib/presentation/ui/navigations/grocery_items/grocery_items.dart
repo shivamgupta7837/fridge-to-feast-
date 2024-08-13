@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/logic/bloc/grocery_items/grocery_items_bloc.dart';
+import 'package:fridge_to_feast/presentation/ui/navigations/grocery_items/barcode_Scanner.dart';
 import 'package:fridge_to_feast/presentation/ui/navigations/grocery_items/update_grocery_items.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -160,7 +162,14 @@ class _GroceryItemsState extends State<GroceryItems> {
               }
             },
           )),
-      floatingActionButton: addGroceryItemWidget(context),
+      floatingActionButton:Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+           BarcodeScanner(),
+           SizedBox(height: 20,),
+           addGroceryItemWidget(context),
+        ],
+      ),
     );
   }
 

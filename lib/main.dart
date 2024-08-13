@@ -9,6 +9,8 @@ import 'package:fridge_to_feast/logic/cubit/auth/auth_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/kitchen_campanion/kitchen_campanion_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/my_recipe/my_recipe_cubit.dart';
 import 'package:fridge_to_feast/logic/cubit/youtube_player/youtube_player_cubit.dart';
+import 'package:fridge_to_feast/mytest.dart';
+import 'package:fridge_to_feast/presentation/ui/features/features.dart';
 import 'package:fridge_to_feast/presentation/ui/splash_screen.dart';
 import 'package:fridge_to_feast/services/push%20notification/push_notification.dart';
 import 'package:workmanager/workmanager.dart';
@@ -88,11 +90,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(103, 58, 183, 1)),
           useMaterial3: true,
         ),
-        home: const SplashScreen(),
-        // home: TestFeature(),
+        // home: const Features(),
+        home: SplashScreen(),
+        // home:TestFeature()
       ),
     );
   }

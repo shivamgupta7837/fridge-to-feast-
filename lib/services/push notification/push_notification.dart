@@ -46,7 +46,7 @@ class Notifications {
             payload: "payload");
       }
     } catch (e) {
-      print("from simple notifications $e");
+      print("error from simple notifications $e");
     }
   }
 
