@@ -32,7 +32,7 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
 
   late TextEditingController expiryDateUpdateController;
 
-  late TextEditingController quantityUpdateController;
+   TextEditingController quantityUpdateController = TextEditingController();
   late TextEditingController unitsUpdateController;
 
   String? _selectedItem;
@@ -44,9 +44,9 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
     super.initState();
     itemsUpdatedController = TextEditingController(text: widget.itemName);
     expiryDateUpdateController = TextEditingController(text: widget.expiryDate);
-    quantityUpdateController =
-        TextEditingController(text: widget.quantity.toString());
-        unitsUpdateController = TextEditingController(text: widget.units);
+    // quantityUpdateController =
+        // TextEditingController(text: widget.quantity.toString());
+        // unitsUpdateController = TextEditingController(text: widget.units);
         _selectedItem = widget.units;
   }
 
@@ -84,10 +84,10 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
                         const SizedBox(
                           height: 20,
                         ),
-                        _quantityTextField(),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        // _quantityTextField(),
+                        // const SizedBox(
+                        //   height: 20,
+                        // ),
                         _expiryDateTextField(context),
                       ],
                     ),
@@ -107,8 +107,7 @@ class _UpdateGroceryItemsState extends State<UpdateGroceryItems> {
                                   updateExpiryDate:
                                       expiryDateUpdateController.text,
                                   id: widget.id,
-                                  quantity: int.parse(
-                                      quantityUpdateController.text), quantityMeasurementUnits: _selectedItem!));
+                                    quantity: 0, quantityMeasurementUnits: _selectedItem!));
                         Navigator.pop(context);
                         Navigator.pop(context);
                         }

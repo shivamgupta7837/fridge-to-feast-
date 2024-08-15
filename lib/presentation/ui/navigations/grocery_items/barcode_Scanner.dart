@@ -14,58 +14,38 @@ class BarcodeScanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GroceryItemsBloc, GroceryItemsState>(
       builder: (context, state) {
-        return FloatingActionButton(
-            tooltip: "Scan UPC QR to Add Grocery  ",
-            onPressed: () async {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog.adaptive(
-                      title: Column(
-                        children: [
-                          Text(
-                            "Scan UPC QR to Add Grocery",
-                            style: GoogleFonts.poppins(fontSize: 18),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Image.asset(
-                            "assets/features/qr.png",
-                            height: 90,
-                          ),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            "Note: The default expiry date for Grocery is 15 days from the current date.You can update the expiry date by tapping three dotted lines",
-                            style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                color: Colors.red,
-                                fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-                      content: ElevatedButton(
-                        onPressed: () async {
-                          String barcodeScanRes =
-                              await FlutterBarcodeScanner.scanBarcode(
-                                  "#673ab7", "Cancel", true, ScanMode.BARCODE);
+        return Column(
+          children: [
+            Image.asset(
+              "assets/features/qr.png",
+              height: 90,
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Text(
+              "Note: The default expiry date for Grocery is 15 days from the current date.You can update the expiry date by tapping three dotted lines",
+              style: GoogleFonts.poppins(
+                  fontSize: 11, color: Colors.red, fontWeight: FontWeight.w500),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder()),
+              onPressed: () async {
+                String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+                    "#673ab7", "Cancel", true, ScanMode.BARCODE);
 
-                          saveGroceryUsingQR(barcodeScanRes, context);
-                        },
-                        child: Text(
-                          "Scan QR",
-                          style: GoogleFonts.poppins(fontSize: 18),
-                        ),
-                      ),
-                    );
-                  });
-            },
-            child: Icon(
-              Icons.qr_code_scanner_outlined,
-              size: 30,
-            ));
+                saveGroceryUsingQR(barcodeScanRes, context);
+              },
+              child: Text(
+                "Scan QR",
+                style: GoogleFonts.poppins(fontSize: 18),
+              ),
+            ),
+          ],
+        );
       },
     );
   }

@@ -25,8 +25,8 @@ class Notifications {
   Future<void> simpleNotification() async {
     const AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-            'your channel id', 'your channel name',
-            channelDescription: 'your channel description',
+            'fridge_to_feast_channel_id', 'Fridge to Feast Notifications',
+            channelDescription: 'Notifications for Fridge to Feast, including recipe suggestions, grocery list reminders, and more.',
             importance: Importance.max,
             priority: Priority.high,
             autoCancel: false,

@@ -32,15 +32,15 @@ class GroceryItemsBloc extends Bloc<GroceryItemsEvent, GroceryItemsState> {
         groceryId: event.id,
         expiryDate: event.expiryDate,
         itemName: event.item,
-        quantity: event.quantity, units: event.quantityMeasurementUnits));
+        quantity: event.quantity!, units: event.quantityMeasurementUnits!));
     emit(GroceryItemsLoadedState(listOfItems: List.from(_list)));
     _fireStore.saveGroceryToDataBase(
         items: Item(
             groceryId: event.id,
             expiryDate: event.expiryDate,
             itemName: event.item,
-            quantity: event.quantity,
-            units: event.quantityMeasurementUnits));
+            quantity: event.quantity!,
+            units: event.quantityMeasurementUnits!));
     }catch(e){
       emit(GroceryItemsErrorState(message: e.toString()));
     }

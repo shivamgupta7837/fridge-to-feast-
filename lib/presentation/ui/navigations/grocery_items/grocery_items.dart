@@ -75,8 +75,11 @@ class _GroceryItemsState extends State<GroceryItems> {
                               : status == "Already expired"
                                   ? Color.fromARGB(255, 212, 50, 38)
                                   : null,
-                          title: goroceryNameText(itemName, status, quantity,unit),
-                          subtitle: expirationStatus(oldDate, todaysDay, expiryDate, status),
+                          title: displayGroceryItems(
+                                  itemName, status, quantity, unit),
+                                  subtitle:  expirationStatus(
+                                  oldDate, todaysDay, expiryDate, status),
+                          // subtitle: expirationStatus(oldDate, todaysDay, expiryDate, status),
                           trailing: IconButton(
                             icon: Icon(
                               Icons.more_vert,
@@ -103,13 +106,13 @@ class _GroceryItemsState extends State<GroceryItems> {
                                                               expiryDate:
                                                                   expiryDate
                                                                       .toString(),
-                                                              id: id!,
+                                                              id: id,
                                                               itemName: itemName
                                                                   .toString(),
                                                               index: index,
                                                               quantity:
-                                                                  quantity!,
-                                                                  units: unit,
+                                                                  quantity,
+                                                              units: unit,
                                                             )));
                                               },
                                               child: const Text("Rename Item")),
@@ -120,7 +123,7 @@ class _GroceryItemsState extends State<GroceryItems> {
                                                     .add(DeleteGroceryItemsEvent(
                                                         itemName: state
                                                             .listOfItems[index],
-                                                        id: id!));
+                                                        id: id));
                                                 Navigator.pop(context);
                                               },
                                               child: const Text("Delete Item")),
@@ -162,82 +165,109 @@ class _GroceryItemsState extends State<GroceryItems> {
               }
             },
           )),
-      floatingActionButton:Column(
+      floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-           BarcodeScanner(),
-           SizedBox(height: 20,),
-           addGroceryItemWidget(context),
+          // BarcodeScanner(),
+          // SizedBox(
+          //   height: 20,
+          // ),
+          addGroceryItemWidget(context),
         ],
       ),
     );
   }
 
-  Text expirationStatus(int oldDate, int todaysDay, String expiryDate, String status) {
+  Text expirationStatus(
+      int oldDate, int todaysDay, String expiryDate, String status) {
     return Text(
-                          oldDate > todaysDay
-                              ? 'Expiring on: $expiryDate'
-                              : oldDate < todaysDay
-                                  ? "Already Expired"
-                                  : "Expiring today",
-                          style: GoogleFonts.poppins(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: status == "Expiring today" ||
-                                      status == "Already expired"
-                                  ? Colors.white
-                                  : null),
-                        );
+      oldDate > todaysDay
+          ? 'Expiring on: $expiryDate'
+          : oldDate < todaysDay
+              ? "Already Expired"
+              : "Expiring today",
+      style: GoogleFonts.poppins(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          color: status == "Expiring today" || status == "Already expired"
+              ? Colors.white
+              : null),
+    );
   }
 
-  Row goroceryNameText(String itemName, String status, int quantity,String unit) {
-    return Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              itemName,
-                              style: GoogleFonts.poppins(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: status == "Expiring today" ||
-                                          status == "Already expired"
-                                      ? Colors.white
-                                      : null),
-                            ),
-                            Text(
-                              " Quantity: ${quantity.toString()} $unit",
-                              style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: status == "Expiring today" ||
-                                          status == "Already expired"
-                                      ? Colors.white
-                                      : null),
-                            )
-                          ],
-                        );
+  Widget displayGroceryItems(
+      String itemName, String status, int quantity, String unit) {
+    return Text(
+      itemName,
+      style: GoogleFonts.poppins(
+          fontSize: 15,
+          fontWeight: FontWeight.w500,
+          color: status == "Expiring today" || status == "Already expired"
+              ? Colors.white
+              : null),
+    );
   }
 
   FloatingActionButton addGroceryItemWidget(BuildContext context) {
     return FloatingActionButton(
-        tooltip: "Add Grocery",
+        tooltip: "Add Grocery manually",
         onPressed: () async {
           _showAlertDialogBox(context: context);
         },
         child: Icon(Icons.add));
   }
 
-  Future<dynamic> _showAlertDialogBox(
-      {required BuildContext context, dynamic state}) {
-    // if (state is GroceryItemsLoadedState) {}
+  Future<dynamic> _showAlertDialogBox({required BuildContext context}) {
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Add Grocery'),
+          backgroundColor: Colors.white,
+          title: Row(
+            children: [
+              Text(
+                "Scan UPC QR to Add Grocery",
+                style: GoogleFonts.poppins(fontSize: 18),
+              ),
+            ],
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
+                BarcodeScanner(),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Divider(
+                        color: Colors.grey,
+                        thickness: 1,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text("OR", style: TextStyle(color: Colors.grey)),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        color: Colors.grey,
+                        thickness: 1,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  "Add Grocery Manually",
+                  style: GoogleFonts.poppins(fontSize: 18),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -246,10 +276,11 @@ class _GroceryItemsState extends State<GroceryItems> {
                       const SizedBox(
                         height: 10,
                       ),
-                      _quantityTextField(),
-                      const SizedBox(
-                        height: 10,
-                      ),
+                      //! Not in use for now
+                      // _quantityTextField(),
+                      // const SizedBox(
+                      //   height: 10,
+                      // ),
                       _expiryDateTextField(context),
                     ],
                   ),
@@ -266,11 +297,11 @@ class _GroceryItemsState extends State<GroceryItems> {
                       item: _itemsController.text,
                       expiryDate: _expiryDateController.text,
                       id: DateTime.now().millisecondsSinceEpoch,
-                      quantity: int.parse(_quantityController.text),
-                      quantityMeasurementUnits: _selectedItem!));
+                      quantity: 1,
+                      quantityMeasurementUnits: "null"));
                   _expiryDateController.clear();
                   _itemsController.clear();
-                  _quantityController.clear();
+                  // _quantityController.clear();
                   Navigator.of(context).pop();
                 }
               },

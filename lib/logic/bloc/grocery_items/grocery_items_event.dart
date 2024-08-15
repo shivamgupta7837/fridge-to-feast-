@@ -8,15 +8,16 @@ sealed class GroceryItemsEvent extends Equatable {
 }
 
 
+// ignore: must_be_immutable
 class AddGroceryItemsEvent extends GroceryItemsEvent {
   final String item;
   final String expiryDate;
   final int id;
-  final int quantity;
-  final String quantityMeasurementUnits;
+   int quantity;
+   String quantityMeasurementUnits;
 
   
-  const AddGroceryItemsEvent({required this.quantityMeasurementUnits,  required  this.item,required this.expiryDate,required this.id, required this.quantity});
+   AddGroceryItemsEvent( {required this.quantityMeasurementUnits, required this.quantity,  required  this.item,required this.expiryDate,required this.id});
 
   List<Object> get props => [item,expiryDate,id,quantity,quantityMeasurementUnits];
   

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fridge_to_feast/logic/cubit/auth/auth_cubit.dart';
 import 'package:fridge_to_feast/presentation/home_page.dart';
+import 'package:fridge_to_feast/presentation/ui/features/app_goto_screen.dart';
 import 'package:fridge_to_feast/services/login_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -65,7 +66,7 @@ class LoginPage extends StatelessWidget {
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => HomePageScreen()));
+                                    builder: (context) => AppGoToScreen()));
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               backgroundColor: Colors.deepPurple.shade300,

@@ -45,50 +45,50 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        
         centerTitle: true,
-     backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         shadowColor: Colors.black,
         elevation: 0.5,
         foregroundColor: Colors.black,
         title: Text(
           titleOfNavigationScreens[currentPageIndex],
           style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.w400,
-                      ),
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         actions: [
-               GestureDetector(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => RecipeDetail()));
-                    },
-                    child: Icon(Icons.download_for_offline_outlined,size: 25,)
-                  ),
-                  SizedBox(width: 13,),
-           Padding(
-             padding: const EdgeInsets.only(right:10.0),
-             child: GestureDetector(
-                      onTap: ()async{
-                        
-                       LocalRepo repo = LocalRepo();
-    final details = await repo.getUserCredentials();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => Profile(
-                                    userName: details.name.toString(),
-                                    email: details.email.toString(),
-                                    profile_url: details.profileUrl.toString(),
-                                  )));
-                        },
-                                  
-                      child: ClipOval(
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: Icon(Icons.person))
-                    ),
-           ),
+          GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => RecipeDetail()));
+              },
+              child: Icon(
+                Icons.download_for_offline_outlined,
+                size: 25,
+              )),
+          SizedBox(
+            width: 13,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: GestureDetector(
+                onTap: () async {
+                  LocalRepo repo = LocalRepo();
+                  final details = await repo.getUserCredentials();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => Profile(
+                                userName: details.name.toString(),
+                                email: details.email.toString(),
+                                profile_url: details.profileUrl.toString(),
+                              )));
+                },
+                child: ClipOval(
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: Icon(Icons.person))),
+          ),
         ],
       ),
       body: SafeArea(
