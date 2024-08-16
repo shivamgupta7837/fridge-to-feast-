@@ -7,83 +7,118 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Notifications {
-  static final FlutterLocalNotificationsPlugin _flutter_local_notifications =
+  // Local notifications instance
+  static final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  // Initialize notifications
   static Future<void> init() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
+    const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    final InitializationSettings initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: null,
-        linux: null);
-    await _flutter_local_notifications.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: (detail) {});
+    final InitializationSettings initSettings = InitializationSettings(
+      android: androidSettings,
+    );
+
+    await _localNotificationsPlugin.initialize(initSettings,
+        onDidReceiveNotificationResponse: (details) {
+      // Handle notification response
+    });
   }
 
-  Future<void> simpleNotification() async {
-    const AndroidNotificationDetails androidNotificationDetails =
+  // Display a simple notification with expiry alerts
+  Future<void> showExpiryNotification() async {
+    const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
-            'fridge_to_feast_channel_id', 'Fridge to Feast Notifications',
-            channelDescription: 'Notifications for Fridge to Feast, including recipe suggestions, grocery list reminders, and more.',
-            importance: Importance.max,
-            priority: Priority.high,
-            autoCancel: false,
-            ticker: 'ticker');
+      'fridge_to_feast_channel_id',
+      'Fridge to Feast Notifications',
+      channelDescription:
+          'Notifications for Fridge to Feast, including recipe suggestions, grocery list reminders, and more.',
+      importance: Importance.max,
+      priority: Priority.high,
+      autoCancel: false,
+      ticker: 'ticker',
+    );
 
     try {
-      // print("Simple notification");
-      List<Item> data = await getExpiryDate();
-      for (var i = 0; i < data.length; i++) {
-        const NotificationDetails notificationDetails =
-            NotificationDetails(android: androidNotificationDetails);
-        await _flutter_local_notifications.show(
-            i,
-            "${data[i].itemName.toString()} is Expiring today!",
-            "Check out recipe ideas to use it up on Kitchen Companion!!",
-            notificationDetails,
-            payload: "payload");
-      }
+      List<Item> expiringItems = await _getExpiringItems();
+      await _sendNotifications(expiringItems, androidDetails);
     } catch (e) {
-      print("error from simple notifications $e");
+      print("Error from showExpiryNotification: $e");
     }
   }
 
-  Future<List<Item>> getExpiryDate() async {
-    final CollectionReference groceriesObj =
+  // Get the items that are expiring soon or today
+  Future<List<Item>> _getExpiringItems() async {
+    final CollectionReference groceriesCollection =
         FirebaseFirestore.instance.collection("users");
-    List<Item> groceryListFromDatabase = [];
-    List<Item> items = [];
-    SharedPreferences sharePref = await SharedPreferences.getInstance();
-    final uId = sharePref.getString(AuthKeys.USER_ID);
 
-    final currentDate =
-        DateFormat("yyyy-MM-dd").format(DateTime.now()).toString();
+    List<Item> groceryList = [];
+    List<Item> expiringItems = [];
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString(AuthKeys.USER_ID);
+
+    final currentDateStr = DateFormat("yyyy-MM-dd").format(DateTime.now());
 
     try {
-      final document = groceriesObj.doc(uId).collection(
-          FirebaseCollectionsKeys.groceryItemsCollectionId.toString());
-      DocumentSnapshot<Map<String, dynamic>> dataSnapShot = await document
+      // Fetch grocery items from Firestore
+      final document = groceriesCollection
+          .doc(userId)
+          .collection(FirebaseCollectionsKeys.groceryItemsCollectionId);
+
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await document
           .doc(FirebaseCollectionsKeys.groceryItemsDocumentId)
           .get();
-      List data = await dataSnapShot.data()!["items"];
-      if (data.isEmpty) {
-        return [];
-      } else {
-        for (var ele in data) {
-          groceryListFromDatabase.add(Item.fromJson(ele));
-        }
 
-        items = groceryListFromDatabase
-            .where((date) => date.expiryDate == currentDate)
-            .toList();
+      List<dynamic> itemsData = snapshot.data()?["items"] ?? [];
+
+      if (itemsData.isEmpty) {
+        return [];
       }
-      return items;
+
+      // Parse items and check expiry dates
+      groceryList = itemsData.map((item) => Item.fromJson(item)).toList();
+      DateTime currentDate = DateTime.parse(currentDateStr);
+
+      for (var item in groceryList) {
+        DateTime expiryDate = DateTime.parse(item.expiryDate);
+
+        // Check if the item expires today
+        if (expiryDate == currentDate) {
+          expiringItems.add(item);
+        } else {
+          // Check if the item is expiring soon (in 4 or 2 days)
+          int daysUntilExpiry = expiryDate.difference(currentDate).inDays;
+          if (daysUntilExpiry == 4 || daysUntilExpiry == 2) {
+            expiringItems.add(item);
+          }
+        }
+      }
+
+      return expiringItems;
     } catch (e) {
-      throw Exception(e);
+      throw Exception("Error fetching expiring items: $e");
+    }
+  }
+
+  // Helper method to send notifications
+  Future<void> _sendNotifications(
+      List<Item> items, AndroidNotificationDetails details) async {
+    for (var i = 0; i < items.length; i++) {
+      Item item = items[i];
+      String notificationTitle =
+          "${item.itemName} is Expiring on ${item.expiryDate}!";
+      String notificationBody =
+          "Check out recipe ideas to use it up on Kitchen Companion!";
+
+      await _localNotificationsPlugin.show(
+        i, // Unique ID for each notification
+        notificationTitle,
+        notificationBody,
+        NotificationDetails(android: details),
+        payload: "payload",
+      );
     }
   }
 }
-
-

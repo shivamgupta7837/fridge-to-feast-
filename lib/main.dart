@@ -23,9 +23,10 @@ void callbackDispatcher() async {
 
   final notification = Notifications();
 
-  Workmanager().executeTask((String task, Map<String, dynamic>? inputData) async {
+  Workmanager()
+      .executeTask((String task, Map<String, dynamic>? inputData) async {
     try {
-      await notification.simpleNotification();  
+      await notification.showExpiryNotification();
       return Future.value(true);
     } catch (e) {
       print("Error in callbackDispatcher: $e");
@@ -42,7 +43,8 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    FirebaseFirestore.instance.settings = const Settings(persistenceEnabled: true);
+    FirebaseFirestore.instance.settings =
+        const Settings(persistenceEnabled: true);
     await Notifications.init();
 
     // WorkManager initialization
@@ -51,9 +53,9 @@ void main() async {
     Workmanager().registerPeriodicTask(
       id.toString(),
       'simplePeriodicTask',
-      frequency: Duration(hours: 6),
+      frequency: Duration(hours: 3),
     );
-  } catch (e) { 
+  } catch (e) {
     print("Error from main function: $e");
   }
 
@@ -88,16 +90,15 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(103, 58, 183, 1)),
-          useMaterial3: true,
-        ),
-        // home:  AppGoToScreen(),
-        home: SplashScreen(),
-        // home:TestFeature()
-      ),
-    );
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color.fromRGBO(103, 58, 183, 1)),
+            useMaterial3: true,
+          ),
+          // home:  AppGoToScreen(),
+          home: SplashScreen(),
+          // home: TestFeature()),
+    ));
   }
 }
-
