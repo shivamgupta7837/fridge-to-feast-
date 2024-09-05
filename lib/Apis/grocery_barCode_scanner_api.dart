@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:fridge_to_feast/models/grocery_barCode_scanner_model.dart';
 import 'package:http/http.dart' as http;
 

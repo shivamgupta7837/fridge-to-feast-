@@ -136,7 +136,8 @@ class _GroceryItemsState extends State<GroceryItems> {
                                       ),
                                     ),
                                   );
-                                }),
+                                }
+                                ),
                           ));
                     });
               } else if (state is GroceryItemsLoadingState) {
